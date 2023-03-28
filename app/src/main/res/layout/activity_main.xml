@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="hs.project.cof.presentation.viewModel.ChatViewModel" />
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.view.MainActivity">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/main_chat_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/main_input_container_cl" />
+
+        <TextView
+            android:id="@+id/main_welcome_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="오늘의 코드 질문은 무엇인가요?\n자유롭게 입력해주세요!"
+            android:textSize="20dp" />
+
+        <RelativeLayout
+            android:id="@+id/main_input_container_cl"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:padding="5dp">
+
+            <EditText
+                android:id="@+id/main_input_msg_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toLeftOf="@id/main_input_msg_btn"
+                android:background="@drawable/msg_input_bg"
+                android:hint="메세지를 입력하세요"
+                android:padding="15dp" />
+
+            <ImageButton
+                android:id="@+id/main_input_msg_btn"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:background="?attr/selectableItemBackground"
+                android:src="@drawable/baseline_send_24" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+</layout>
