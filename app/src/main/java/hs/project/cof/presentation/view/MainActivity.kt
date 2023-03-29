@@ -6,20 +6,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import hs.project.cof.BuildConfig
 import hs.project.cof.MessageAdapter
-import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_BOT
 import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_USER
-import hs.project.cof.data.remote.api.chatView
-import hs.project.cof.data.remote.api.chattingService
-import hs.project.cof.data.remote.model.Chat
 import hs.project.cof.data.remote.model.Message
-import hs.project.cof.data.remote.model.RequestMessage
 import hs.project.cof.databinding.ActivityMainBinding
 import hs.project.cof.presentation.viewModel.ChatViewModel
 
 
-class MainActivity : AppCompatActivity(), chatView {
+class MainActivity : AppCompatActivity() {
 
     private val viewModel: ChatViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
@@ -64,39 +58,15 @@ class MainActivity : AppCompatActivity(), chatView {
     private fun sendMessage() {
         binding.mainInputMsgBtn.setOnClickListener {
             val question = binding.mainInputMsgEt.text.toString().trim()
-            addChat(question, SEND_BY_USER)
-            requestMsg(question)
+            // receive message from user
+            viewModel.addMessage(Message(question, SEND_BY_USER))
 
-            viewModel.addMessage(Message("입력 중...", SEND_BY_BOT))
+            // request api
+            viewModel.getMessage(question)
+
             binding.mainInputMsgEt.text.clear()
             binding.mainWelcomeTv.visibility = View.GONE
         }
-    }
-
-    private fun addChat(msg: String, sendBy: Int) {
-        runOnUiThread {
-            viewModel.addMessage(Message(msg, sendBy))
-            binding.mainChatRv.smoothScrollToPosition(binding.mainChatRv.adapter!!.itemCount)
-        }
-    }
-
-    private fun addResponse(response: String) {
-        viewModel.removeLastMessage()
-        addChat(response, SEND_BY_BOT)
-    }
-
-    private fun requestMsg(msg: String) {
-        val chat = Chat(model = "gpt-3.5-turbo",
-                        messages = listOf(RequestMessage(content = msg, role = "user")))
-        chattingService(this).requestMessage(BuildConfig.API_KEY, chat)
-    }
-
-    override fun onGetChatSuccess(message: String) {
-        addResponse(message)
-    }
-
-    override fun onGetChatFailure(message: String) {
-        addResponse(message)
     }
 
 }
