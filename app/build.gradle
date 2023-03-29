@@ -54,6 +54,10 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
 
+
+    // view binding
+    implementation 'com.android.databinding:viewbinding:7.4.2'
+
     // okHTTP
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"

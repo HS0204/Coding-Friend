@@ -8,7 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import hs.project.cof.BuildConfig
 import hs.project.cof.MessageAdapter
-import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_CHAT
+import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_BOT
 import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_USER
 import hs.project.cof.data.remote.api.chatView
 import hs.project.cof.data.remote.api.chattingService
@@ -67,13 +67,13 @@ class MainActivity : AppCompatActivity(), chatView {
             addChat(question, SEND_BY_USER)
             requestMsg(question)
 
-            viewModel.addMessage(Message("입력 중...", SEND_BY_CHAT))
+            viewModel.addMessage(Message("입력 중...", SEND_BY_BOT))
             binding.mainInputMsgEt.text.clear()
             binding.mainWelcomeTv.visibility = View.GONE
         }
     }
 
-    private fun addChat(msg: String, sendBy: String) {
+    private fun addChat(msg: String, sendBy: Int) {
         runOnUiThread {
             viewModel.addMessage(Message(msg, sendBy))
             binding.mainChatRv.smoothScrollToPosition(binding.mainChatRv.adapter!!.itemCount)
@@ -82,8 +82,7 @@ class MainActivity : AppCompatActivity(), chatView {
 
     private fun addResponse(response: String) {
         viewModel.removeLastMessage()
-        addChat(response, SEND_BY_CHAT)
-        binding.mainInputMsgEt.text.clear()
+        addChat(response, SEND_BY_BOT)
     }
 
     private fun requestMsg(msg: String) {
