@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="version_array">
+        <item>채팅</item>
+        <item>completion</item>
+        <item>문법 확인</item>
+    </string-array>
+
+    <string-array name="models_array">
+        <item>gpt-3.5-turbo</item>
+        <item>text-davinci-003</item>
+        <item>text-davinci-edit-001</item>
+    </string-array>
+</resources>

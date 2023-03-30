@@ -11,12 +11,6 @@ fun sendingTextVisible(sendingText: TextView, apiStatus: ChatViewModel.MessageAp
         ChatViewModel.MessageApiStatus.LOADING -> {
             sendingText.visibility = View.VISIBLE
         }
-        ChatViewModel.MessageApiStatus.ERROR -> {
-            sendingText.visibility = View.GONE
-        }
-        ChatViewModel.MessageApiStatus.DONE -> {
-            sendingText.visibility = View.GONE
-        }
         else -> {
             sendingText.visibility = View.GONE
         }

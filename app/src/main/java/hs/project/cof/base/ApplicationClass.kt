@@ -14,8 +14,15 @@ class ApplicationClass : Application() {
         // Retrofit
         lateinit var retrofit: Retrofit
 
+        // 발신자 분류
         const val SEND_BY_BOT = 1
         const val SEND_BY_USER = 2
+        const val SEND_BY_LINE = 3
+
+        // 모델 분류
+        const val CHAT = "gpt-3.5-turbo"
+        const val COMPLETION = "text-davinci-003"
+        const val EDIT = "text-davinci-edit-001"
     }
 
     override fun onCreate() {

@@ -1,26 +1,22 @@
 package hs.project.cof.data.remote.model
 
-data class ChatResponse(
-    val choices: List<ChatChoice>,
+data class CompletionResponse(
+    val choices: List<CompletionChoice>,
     val created: Int,
     val id: String,
     val model: String,
     val `object`: String,
-    val usage: ChatUsage
+    val usage: CompletionUsage
 )
 
-data class ChatChoice(
+data class CompletionChoice(
     val finish_reason: String,
     val index: Int,
-    val message: ChatResponseMessage
+    val logprobs: Any,
+    val text: String
 )
 
-data class ChatResponseMessage(
-    val content: String,
-    val role: String
-)
-
-data class ChatUsage(
+data class CompletionUsage(
     val completion_tokens: Int,
     val prompt_tokens: Int,
     val total_tokens: Int
