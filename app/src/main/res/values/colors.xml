@@ -10,4 +10,5 @@
 
     <color name="send_msg_chat">#2196F3</color>
     <color name="send_msg_user">#4CAF50</color>
+    <color name="white_transfer">#5BFFFFFF</color>
 </resources>

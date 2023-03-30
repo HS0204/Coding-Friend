@@ -1,11 +1,11 @@
 package hs.project.cof.data.remote.model
 
-data class Chat(
-    val messages: List<RequestMessage>,
+data class ChatRequest(
+    val messages: List<ChatRequestMessage>,
     val model: String
 )
 
-data class RequestMessage(
+data class ChatRequestMessage(
     val content: String,
     val role: String
 )

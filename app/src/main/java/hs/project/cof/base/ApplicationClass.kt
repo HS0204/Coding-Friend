@@ -1,12 +1,10 @@
 package hs.project.cof.base
 
 import android.app.Application
-import hs.project.cof.data.remote.model.Message
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 class ApplicationClass : Application() {
 
@@ -16,8 +14,15 @@ class ApplicationClass : Application() {
         // Retrofit
         lateinit var retrofit: Retrofit
 
-        const val SEND_BY_USER = "USER"
-        const val SEND_BY_CHAT = "CHAT"
+        // 발신자 분류
+        const val SEND_BY_BOT = 1
+        const val SEND_BY_USER = 2
+        const val SEND_BY_LINE = 3
+
+        // 모델 분류
+        const val CHAT = "gpt-3.5-turbo"
+        const val COMPLETION = "text-davinci-003"
+        const val EDIT = "text-davinci-edit-001"
     }
 
     override fun onCreate() {
