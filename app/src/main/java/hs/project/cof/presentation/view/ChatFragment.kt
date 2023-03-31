@@ -2,12 +2,14 @@ package hs.project.cof.presentation.view
 
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import hs.project.cof.MessageAdapter
 import hs.project.cof.R
 import hs.project.cof.base.ApplicationClass
+import hs.project.cof.base.ApplicationClass.Companion.RESET
 import hs.project.cof.base.BaseFragment
 import hs.project.cof.data.remote.model.Message
 import hs.project.cof.databinding.FragmentChatBinding
@@ -30,6 +32,18 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         viewModel.messageList.observe(viewLifecycleOwner, Observer { messageList ->
             messageAdapter.setMessageList(messageList)
             binding.mainChatRv.smoothScrollToPosition(if (messageList.size == 0) 0 else messageList.size - 1)
+
+            // reset btn visibility & anim control
+            if (messageList.isNotEmpty()) {
+                binding.mainActionbarResetIb.visibility = View.VISIBLE
+
+                if (viewModel.apiStatus.value == ChatViewModel.MessageApiStatus.NONESTARTED) {
+                    val anim = AnimationUtils.loadAnimation(context, R.anim.bounce)
+                    binding.mainActionbarResetIb.startAnimation(anim)
+                }
+            } else {
+                binding.mainActionbarResetIb.visibility = View.GONE
+            }
         })
 
         // observe api status changes
@@ -40,7 +54,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         })
 
         sendMessageListener()
-        settingListener()
+        resetBtnListener()
+        settingBtnListener()
     }
 
     private fun setAdapter() {
@@ -56,7 +71,6 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
             val question = binding.mainInputMsgEt.text.toString().trim()
             // receive message from user
             viewModel.addMessage(Message(question, ApplicationClass.SEND_BY_USER))
-
             // request api
             viewModel.getMessageFromChatGPT(question)
 
@@ -64,9 +78,16 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         }
     }
 
-    private fun settingListener() {
+    private fun settingBtnListener() {
         binding.mainActionbarSettingIb.setOnClickListener {
             moveFragment(R.id.action_chatFragment_to_settingFragment)
+        }
+    }
+
+    private fun resetBtnListener() {
+        binding.mainActionbarResetIb.setOnClickListener {
+            val dialogFragment = SettingDialogFragment.newInstance(RESET)
+            dialogFragment.show(childFragmentManager, "reset_check_dialog")
         }
     }
 }

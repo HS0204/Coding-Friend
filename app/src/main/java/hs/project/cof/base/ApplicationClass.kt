@@ -25,9 +25,10 @@ class ApplicationClass : Application() {
         const val COMPLETION = "text-davinci-003"
         const val EDIT = "text-davinci-edit-001"
 
-        // 모델 세팅 환경 분류
+        // 다이얼로그 type 분류
         const val VERSION = "version"
         const val TEMPERATURE = "temperature"
+        const val RESET = "reset"
     }
 
     override fun onCreate() {

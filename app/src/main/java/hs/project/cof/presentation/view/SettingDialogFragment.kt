@@ -8,12 +8,12 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import hs.project.cof.R
+import hs.project.cof.base.ApplicationClass.Companion.RESET
 import hs.project.cof.base.ApplicationClass.Companion.TEMPERATURE
 import hs.project.cof.base.ApplicationClass.Companion.VERSION
 import hs.project.cof.presentation.viewModel.ChatViewModel
@@ -104,9 +104,13 @@ class SettingDialogFragment() : DialogFragment() {
                         }
                     )
                     .setPositiveButton("확인") { _, _ ->
-                        //Toast.makeText(context, "${(seekBar.progress.toFloat()/10f)}", Toast.LENGTH_SHORT).show()
                         viewModel.setTemperature(seekBar.progress)
                     }
+            }
+            RESET -> {
+                builder.setTitle("채팅 내용을 지우시겠습니까?")
+                    .setNegativeButton("아니오") { _, _ -> }
+                    .setPositiveButton("예") { _, _ -> viewModel.clearMessageList() }
             }
             else -> {
 

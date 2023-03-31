@@ -65,7 +65,8 @@ class ChatViewModel : ViewModel() {
         _messageList.value = _messageList.value?.toMutableList()?.apply { removeLastOrNull() }
     }
 
-    private fun clearMessageList() {
+    fun clearMessageList() {
+        _apiStatus.value = MessageApiStatus.NONESTARTED
         _messageList.value = ArrayList<Message>()
     }
 
@@ -94,8 +95,10 @@ class ChatViewModel : ViewModel() {
                      }
                 }
 
-                removeLastMessage()
-                addMessage(response)
+                if (_messageList.value?.size != 0) {
+                    removeLastMessage()
+                    addMessage(response)
+                }
                 _apiStatus.value = MessageApiStatus.DONE
             } catch (e: Exception) {
                 removeLastMessage()
