@@ -18,11 +18,16 @@ class ApplicationClass : Application() {
         const val SEND_BY_BOT = 1
         const val SEND_BY_USER = 2
         const val SEND_BY_LINE = 3
+        const val SEND_BY_TYPING = 4
 
         // 모델 분류
         const val CHAT = "gpt-3.5-turbo"
         const val COMPLETION = "text-davinci-003"
         const val EDIT = "text-davinci-edit-001"
+
+        // 모델 세팅 환경 분류
+        const val VERSION = "version"
+        const val TEMPERATURE = "temperature"
     }
 
     override fun onCreate() {

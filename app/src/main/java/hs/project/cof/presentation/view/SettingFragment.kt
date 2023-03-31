@@ -1,32 +1,42 @@
 package hs.project.cof.presentation.view
 
-import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import android.view.View
 import androidx.fragment.app.activityViewModels
-import hs.project.cof.R
+import androidx.lifecycle.Observer
+import hs.project.cof.base.ApplicationClass.Companion.TEMPERATURE
+import hs.project.cof.base.ApplicationClass.Companion.VERSION
+import hs.project.cof.base.BaseFragment
+import hs.project.cof.databinding.FragmentSettingBinding
 import hs.project.cof.presentation.viewModel.ChatViewModel
 
-class SettingFragment : DialogFragment() {
+
+class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
 
     private val viewModel: ChatViewModel by activityViewModels()
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let {
-            val builder = AlertDialog.Builder(it)
-            builder.setTitle("버전을 선택해주세요")
-                .setItems(
-                    R.array.version_array,
-                    DialogInterface.OnClickListener { dialog, which ->
-                        val modelValues = resources.getStringArray(R.array.models_array)
-                        val selectedValue = modelValues[which]
-                        val selectedVersion = resources.getStringArray(R.array.version_array)[which]
-                        viewModel.setModel(selectedValue, selectedVersion)
-                    })
-            builder.create()
-        } ?: throw IllegalStateException("Activity cannot be null")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
+        // observe version changes
+        viewModel.version.observe(viewLifecycleOwner, Observer { version ->
+          binding.settingVersionPresentVTv.text = "현재: $version"
+        })
+
+        binding.settingVersionContainerCl.setOnClickListener {
+            showDialogFragment(VERSION)
+        }
+
+        binding.settingTemperatureContainerCl.setOnClickListener {
+            showDialogFragment(TEMPERATURE)
+        }
+    }
+
+    private fun showDialogFragment(type: String) {
+        val dialogFragment = SettingDialogFragment.newInstance(type)
+        dialogFragment.show(childFragmentManager, "detail_settings_dialog")
     }
 }

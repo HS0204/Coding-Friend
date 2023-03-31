@@ -1,17 +1,21 @@
 package hs.project.cof
 
+import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.widget.ViewFlipper
 import androidx.recyclerview.widget.RecyclerView
-import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_BOT
 import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_LINE
+import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_TYPING
 import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_USER
 import hs.project.cof.data.remote.model.Message
 import hs.project.cof.databinding.ItemChatBotBinding
 import hs.project.cof.databinding.ItemChatLineBinding
 import hs.project.cof.databinding.ItemChatUserBinding
 
-class MessageAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var messageList = listOf<Message>()
 
@@ -26,15 +30,15 @@ class MessageAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     ItemChatUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 UserViewHolder(view)
             }
-            SEND_BY_BOT -> {
-                val view =
-                    ItemChatBotBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                BotViewHolder(view)
-            }
-            else -> {
+            SEND_BY_LINE -> {
                 val view =
                     ItemChatLineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 LineViewHolder(view)
+            }
+            else -> {
+                val view =
+                    ItemChatBotBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                BotViewHolder(view)
             }
         }
     }
@@ -46,11 +50,11 @@ class MessageAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             SEND_BY_USER -> {
                 (holder as UserViewHolder).bind(curMsg)
             }
-            SEND_BY_BOT -> {
-                (holder as BotViewHolder).bind(curMsg)
-            }
             SEND_BY_LINE -> {
                 (holder as LineViewHolder).bind(curMsg)
+            }
+            else -> {
+                (holder as BotViewHolder).bind(curMsg)
             }
         }
     }
@@ -79,9 +83,29 @@ class MessageAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class BotViewHolder(binding: ItemChatBotBinding) : RecyclerView.ViewHolder(binding.root) {
         var chatTxt = binding.itemMsgBotTv
+        private val typingIndicator: ViewFlipper = binding.typingIndicator
+
+        init {
+            val bounceAnim = AnimationUtils.loadAnimation(context, R.anim.bounce)
+            chatTxt.startAnimation(bounceAnim)
+
+        }
 
         fun bind(item: Message) {
             chatTxt.text = item.message
+
+            if (item.sendBy == SEND_BY_TYPING) {
+                typingIndicator.apply {
+                    visibility = View.VISIBLE
+                    startFlipping()
+                    flipInterval = 200
+                }
+            } else {
+                typingIndicator.apply {
+                    visibility = View.GONE
+                    stopFlipping()
+                }
+            }
         }
     }
 

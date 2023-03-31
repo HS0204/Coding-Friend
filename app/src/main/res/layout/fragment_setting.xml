@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="hs.project.cof.presentation.viewModel.ChatViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".presentation.view.SettingFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/setting_version_container_cl"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/setting_version_header_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="대화 버전"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/setting_version_content_tv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/setting_version_present_v_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="현재 어쩌구 저쩌구"
+                android:textSize="13sp"
+                android:textColor="@color/send_msg_user"
+                app:layout_constraintBottom_toBottomOf="@id/setting_version_header_tv"
+                app:layout_constraintStart_toEndOf="@id/setting_version_header_tv"
+                app:layout_constraintTop_toTopOf="@id/setting_version_header_tv" />
+
+            <TextView
+                android:id="@+id/setting_version_content_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="챗봇과 대화할 버전을 설정합니다."
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/setting_version_header_tv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/send_msg_user" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/setting_temperature_container_cl"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/setting_temperature_header_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="독창성"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/setting_temperature_content_tv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/setting_temperature_content_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="챗봇이 창의적인 답변을 할 확률을 설정합니다.\n 1.0에 가까울 수록 고정적, 2.0에 가까울 수록 독창적인 답변을 합니다."
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/setting_temperature_header_tv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+</layout>

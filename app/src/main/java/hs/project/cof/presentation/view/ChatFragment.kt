@@ -6,6 +6,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import hs.project.cof.MessageAdapter
+import hs.project.cof.R
 import hs.project.cof.base.ApplicationClass
 import hs.project.cof.base.BaseFragment
 import hs.project.cof.data.remote.model.Message
@@ -25,21 +26,25 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
 
         setAdapter()
 
-        // show welcome message
-        binding.mainWelcomeTv.visibility = View.VISIBLE
-
         // observe message list changes
         viewModel.messageList.observe(viewLifecycleOwner, Observer { messageList ->
             messageAdapter.setMessageList(messageList)
             binding.mainChatRv.smoothScrollToPosition(if (messageList.size == 0) 0 else messageList.size - 1)
         })
 
+        // observe api status changes
+        viewModel.apiStatus.observe(viewLifecycleOwner, Observer { apiStatus ->
+            if (apiStatus.equals(ChatViewModel.MessageApiStatus.LOADING)) {
+                viewModel.addTypingMessage()
+            }
+        })
+
         sendMessageListener()
-        modelSettingListener()
+        settingListener()
     }
 
     private fun setAdapter() {
-        messageAdapter = MessageAdapter()
+        messageAdapter = MessageAdapter(requireContext())
         binding.mainChatRv.adapter = messageAdapter
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         layoutManager.stackFromEnd
@@ -53,17 +58,15 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
             viewModel.addMessage(Message(question, ApplicationClass.SEND_BY_USER))
 
             // request api
-            viewModel.getMessage(question)
+            viewModel.getMessageFromChatGPT(question)
 
             binding.mainInputMsgEt.text.clear()
-            binding.mainWelcomeTv.visibility = View.GONE
         }
     }
 
-    private fun modelSettingListener() {
+    private fun settingListener() {
         binding.mainActionbarSettingIb.setOnClickListener {
-            val dialogFragment = SettingFragment()
-            dialogFragment.show(childFragmentManager, "settings_dialog")
+            moveFragment(R.id.action_chatFragment_to_settingFragment)
         }
     }
 }
