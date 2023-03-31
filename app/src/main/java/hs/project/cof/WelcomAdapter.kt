@@ -12,7 +12,7 @@ fun sendingTextVisible(sendingText: TextView, apiStatus: ChatViewModel.MessageAp
             sendingText.visibility = View.VISIBLE
         }
         else -> {
-            sendingText.visibility = View.GONE
+            sendingText.visibility = View.INVISIBLE
         }
     }
 }

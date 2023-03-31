@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 
 abstract class BaseFragment<B : ViewBinding>(
     private val inflate: (LayoutInflater) -> B
@@ -26,5 +27,13 @@ abstract class BaseFragment<B : ViewBinding>(
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    fun moveFragment(resId: Int) {
+        findNavController().navigate(resId)
+    }
+
+    fun backFragment() {
+        findNavController().navigateUp()
     }
 }

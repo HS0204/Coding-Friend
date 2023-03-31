@@ -23,24 +23,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="봇이 메세지를 입력 중 입니다..."
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:sendingTextVisible="@{viewModel.apiStatus}" />
+                android:layout_height="match_parent">
 
-            <ImageButton
-                android:id="@+id/main_actionbar_setting_ib"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="10dp"
-                android:background="?attr/selectableItemBackground"
-                android:padding="4dp"
-                android:src="@drawable/baseline_settings_24" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="봇이 메세지를 입력 중 입니다..."
+                    app:sendingTextVisible="@{viewModel.apiStatus}" />
+
+
+                <ImageButton
+                    android:id="@+id/main_actionbar_setting_ib"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="10dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="4dp"
+                    android:src="@drawable/baseline_settings_24" />
+
+            </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -53,19 +60,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/main_actionbar_tb" />
-
-        <TextView
-            android:id="@+id/main_welcome_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="오늘의 질문은 무엇인가요?\n자유롭게 입력해주세요!"
-            android:textSize="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <RelativeLayout
             android:id="@+id/main_input_container_cl"
