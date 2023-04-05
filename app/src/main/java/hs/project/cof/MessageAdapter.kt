@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ViewFlipper
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_LINE
 import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_TYPING
@@ -15,7 +17,7 @@ import hs.project.cof.databinding.ItemChatBotBinding
 import hs.project.cof.databinding.ItemChatLineBinding
 import hs.project.cof.databinding.ItemChatUserBinding
 
-class MessageAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.ViewHolder>(DiffCallback) {
 
     private var messageList = listOf<Message>()
 
@@ -117,5 +119,18 @@ class MessageAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
             versionTxt.text = item.message
         }
     }
+
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<Message>() {
+            override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean {
+                return oldItem.message == newItem.message
+            }
+
+            override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
+
 
 }
