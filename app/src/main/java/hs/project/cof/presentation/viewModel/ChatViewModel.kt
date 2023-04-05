@@ -1,9 +1,6 @@
 package hs.project.cof.presentation.viewModel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import hs.project.cof.BuildConfig
 import hs.project.cof.base.ApplicationClass.Companion.CHAT
 import hs.project.cof.base.ApplicationClass.Companion.COMPLETION
@@ -11,11 +8,13 @@ import hs.project.cof.base.ApplicationClass.Companion.EDIT
 import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_BOT
 import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_LINE
 import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_TYPING
+import hs.project.cof.data.db.MessageList
+import hs.project.cof.data.db.MessageListDao
 import hs.project.cof.data.remote.api.ChatGPTAPI
 import hs.project.cof.data.remote.model.*
 import kotlinx.coroutines.launch
 
-class ChatViewModel : ViewModel() {
+class ChatViewModel(private val msgListDao: MessageListDao) : ViewModel() {
 
     enum class MessageApiStatus { NONESTARTED, LOADING, ERROR, DONE }
 
@@ -31,6 +30,9 @@ class ChatViewModel : ViewModel() {
 
     private var _messageList = MutableLiveData<MutableList<Message>>()
     val messageList: LiveData<MutableList<Message>> = _messageList
+
+    // Database
+    val allMessageList: LiveData<List<MessageList>> = msgListDao.getMsgLists().asLiveData()    // flow를 반환하기 때문에 liveData로 사용하기 위해 asLiveData()
 
     init {
         clearMessageList()
@@ -108,4 +110,27 @@ class ChatViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Database
+     */
+    fun insertMessageList(msgList: MessageList) {
+        viewModelScope.launch {
+            msgListDao.insert(msgList)
+        }
+    }
+
+    fun retrieveMessageList(id: Int): LiveData<MessageList> {
+        return msgListDao.getMsgList(id).asLiveData()
+    }
+
+}
+
+class ChatViewModelFactory(private val msgListDao: MessageListDao) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(ChatViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return ChatViewModel(msgListDao) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
 }

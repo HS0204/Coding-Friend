@@ -13,10 +13,17 @@ import hs.project.cof.base.ApplicationClass.Companion.RESET
 import hs.project.cof.base.BaseFragment
 import hs.project.cof.data.remote.model.Message
 import hs.project.cof.databinding.FragmentChatBinding
+import hs.project.cof.presentation.viewModel.ChatViewModelFactory
 import hs.project.cof.presentation.viewModel.ChatViewModel
 
 class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::inflate) {
-    private val viewModel: ChatViewModel by activityViewModels()
+
+    private val viewModel: ChatViewModel by activityViewModels {
+        ChatViewModelFactory(
+            (activity?.application as ApplicationClass).database.MessageListDao()
+        )
+    }
+
     private lateinit var messageAdapter: MessageAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

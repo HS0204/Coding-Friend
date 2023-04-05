@@ -1,12 +1,15 @@
 package hs.project.cof.base
 
 import android.app.Application
+import hs.project.cof.data.db.MessageListDataBase
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class ApplicationClass : Application() {
+
+    val database: MessageListDataBase by lazy { MessageListDataBase.getDatabase(this) }
 
     companion object {
         // 서버 주소

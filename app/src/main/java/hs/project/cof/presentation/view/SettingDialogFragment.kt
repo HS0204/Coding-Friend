@@ -13,14 +13,20 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import hs.project.cof.R
+import hs.project.cof.base.ApplicationClass
 import hs.project.cof.base.ApplicationClass.Companion.RESET
 import hs.project.cof.base.ApplicationClass.Companion.TEMPERATURE
 import hs.project.cof.base.ApplicationClass.Companion.VERSION
+import hs.project.cof.presentation.viewModel.ChatViewModelFactory
 import hs.project.cof.presentation.viewModel.ChatViewModel
 
 class SettingDialogFragment() : DialogFragment() {
 
-    private val viewModel: ChatViewModel by activityViewModels()
+    private val viewModel: ChatViewModel by activityViewModels {
+        ChatViewModelFactory(
+            (activity?.application as ApplicationClass).database.MessageListDao()
+        )
+    }
     private lateinit var type: String
     private lateinit var builder: AlertDialog.Builder
 
