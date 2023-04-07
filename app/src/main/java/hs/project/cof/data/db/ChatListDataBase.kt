@@ -6,22 +6,22 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [MessageList::class], version = 1, exportSchema = false)
-@TypeConverters(MessageListConverters::class)
-abstract class MessageListDataBase : RoomDatabase() {
+@Database(entities = [ChatList::class], version = 1, exportSchema = false)
+@TypeConverters(ChatListConverters::class)
+abstract class ChatListDataBase : RoomDatabase() {
 
-    abstract fun MessageListDao(): MessageListDao
+    abstract fun ChatListDao(): ChatListDao
 
     companion object {
         @Volatile
-        private var INSTANCE: MessageListDataBase? = null
+        private var INSTANCE: ChatListDataBase? = null
 
-        fun getDatabase(context: Context): MessageListDataBase {
+        fun getDatabase(context: Context): ChatListDataBase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    MessageListDataBase::class.java,
-                    "message_list_db"
+                    ChatListDataBase::class.java,
+                    "chat_list_db"
                 )
                     .fallbackToDestructiveMigration()
                     .build()

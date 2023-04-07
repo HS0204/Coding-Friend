@@ -5,25 +5,37 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import hs.project.cof.MessageAdapter
 import hs.project.cof.R
 import hs.project.cof.base.ApplicationClass
-import hs.project.cof.base.ApplicationClass.Companion.RESET
+import hs.project.cof.base.ApplicationClass.Companion.getViewType
+import hs.project.cof.base.ApplicationClass.Companion.getViewName
+import hs.project.cof.base.ApplicationClass.Companion.SendBy
+import hs.project.cof.base.ApplicationClass.Companion.DialogType
+import hs.project.cof.base.ApplicationClass.Companion.getDialogType
 import hs.project.cof.base.BaseFragment
+import hs.project.cof.data.db.ChatList
 import hs.project.cof.data.remote.model.Message
 import hs.project.cof.databinding.FragmentChatBinding
+import hs.project.cof.presentation.viewModel.ChatListViewModel
+import hs.project.cof.presentation.viewModel.ChatListViewModelFactory
 import hs.project.cof.presentation.viewModel.ChatViewModelFactory
 import hs.project.cof.presentation.viewModel.ChatViewModel
 
 class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::inflate) {
 
-    private val viewModel: ChatViewModel by activityViewModels {
-        ChatViewModelFactory(
-            (activity?.application as ApplicationClass).database.MessageListDao()
+    private val chatViewModel: ChatViewModel by activityViewModels {
+        ChatViewModelFactory()
+    }
+    private val listViewModel: ChatListViewModel by activityViewModels {
+        ChatListViewModelFactory(
+            (activity?.application as ApplicationClass).database.ChatListDao()
         )
     }
 
+    private val argsFromList by navArgs<ChatFragmentArgs>()
     private lateinit var messageAdapter: MessageAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,12 +43,13 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
 
         // set viewModel
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+        binding.chatViewModel = chatViewModel
+        binding.listViewModel = listViewModel
 
         setAdapter()
 
         // observe message list changes
-        viewModel.messageList.observe(viewLifecycleOwner, Observer { messageList ->
+        chatViewModel.messageList.observe(viewLifecycleOwner, Observer { messageList ->
             messageAdapter.setMessageList(messageList)
             binding.mainChatRv.smoothScrollToPosition(if (messageList.size == 0) 0 else messageList.size - 1)
 
@@ -44,7 +57,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
             if (messageList.isNotEmpty()) {
                 binding.mainActionbarResetIb.visibility = View.VISIBLE
 
-                if (viewModel.apiStatus.value == ChatViewModel.MessageApiStatus.NONESTARTED) {
+                if (chatViewModel.apiStatus.value == ChatViewModel.MessageApiStatus.NONESTARTED) {
                     val anim = AnimationUtils.loadAnimation(context, R.anim.bounce)
                     binding.mainActionbarResetIb.startAnimation(anim)
                 }
@@ -54,15 +67,38 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         })
 
         // observe api status changes
-        viewModel.apiStatus.observe(viewLifecycleOwner, Observer { apiStatus ->
+        chatViewModel.apiStatus.observe(viewLifecycleOwner, Observer { apiStatus ->
             if (apiStatus.equals(ChatViewModel.MessageApiStatus.LOADING)) {
-                viewModel.addTypingMessage()
+                chatViewModel.addTypingMessage()
             }
         })
 
         sendMessageListener()
         resetBtnListener()
+        chatListBtnListener()
         settingBtnListener()
+
+        /**
+         * 버튼 클릭해야 저장되는 임시 코드 for 테스트
+         */
+        binding.mainActionbarChatSaveIb.setOnClickListener {
+            val chatList = ChatList(
+                regDate = 0L,
+                modDate = 0L,
+                title = chatViewModel.messageList.value!![0].message,
+                version = getViewName(chatViewModel.messageList.value!![0].sendBy),
+                chatList = chatViewModel.messageList.value.orEmpty().toList()
+            )
+            listViewModel.insertChatList(chatList)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        argsFromList.retrieveChatList?.let {
+            retrieveMessageList()
+        }
     }
 
     private fun setAdapter() {
@@ -73,13 +109,26 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         binding.mainChatRv.layoutManager = layoutManager
     }
 
+    private fun retrieveMessageList() {
+        chatViewModel.clearMessageList()
+        argsFromList.retrieveChatList?.chatList?.let {
+            chatViewModel.retrieveMessageListFromList(it)
+            messageAdapter.setMessageList(it)
+        }
+    }
+
     private fun sendMessageListener() {
         binding.mainInputMsgBtn.setOnClickListener {
             val question = binding.mainInputMsgEt.text.toString().trim()
             // receive message from user
-            viewModel.addMessage(Message(question, ApplicationClass.SEND_BY_USER))
+            chatViewModel.addMessage(
+                Message(
+                    question,
+                    getViewType(SendBy.USER)
+                )
+            )
             // request api
-            viewModel.getMessageFromChatGPT(question)
+            chatViewModel.getMessageFromChatGPT(question)
 
             binding.mainInputMsgEt.text.clear()
         }
@@ -91,9 +140,15 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         }
     }
 
+    private fun chatListBtnListener() {
+        binding.mainActionbarChatListIb.setOnClickListener {
+            moveFragment(R.id.action_chatFragment_to_chatListFragment)
+        }
+    }
+
     private fun resetBtnListener() {
         binding.mainActionbarResetIb.setOnClickListener {
-            val dialogFragment = SettingDialogFragment.newInstance(RESET)
+            val dialogFragment = SettingDialogFragment.newInstance(getDialogType(DialogType.RESET))
             dialogFragment.show(childFragmentManager, "reset_check_dialog")
         }
     }

@@ -9,9 +9,8 @@ import android.widget.ViewFlipper
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_LINE
-import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_TYPING
-import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_USER
+import hs.project.cof.base.ApplicationClass.Companion.SendBy
+import hs.project.cof.base.ApplicationClass.Companion.getViewType
 import hs.project.cof.data.remote.model.Message
 import hs.project.cof.databinding.ItemChatBotBinding
 import hs.project.cof.databinding.ItemChatLineBinding
@@ -27,12 +26,12 @@ class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.V
     ): RecyclerView.ViewHolder {
 
         return when (viewType) {
-            SEND_BY_USER -> {
+            getViewType(SendBy.USER) -> {
                 val view =
                     ItemChatUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 UserViewHolder(view)
             }
-            SEND_BY_LINE -> {
+            getViewType(SendBy.VERSION) -> {
                 val view =
                     ItemChatLineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 LineViewHolder(view)
@@ -49,10 +48,10 @@ class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.V
         val curMsg = messageList[position]
 
         when (curMsg.sendBy) {
-            SEND_BY_USER -> {
+            getViewType(SendBy.USER) -> {
                 (holder as UserViewHolder).bind(curMsg)
             }
-            SEND_BY_LINE -> {
+            getViewType(SendBy.VERSION) -> {
                 (holder as LineViewHolder).bind(curMsg)
             }
             else -> {
@@ -96,7 +95,7 @@ class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.V
         fun bind(item: Message) {
             chatTxt.text = item.message
 
-            if (item.sendBy == SEND_BY_TYPING) {
+            if (item.sendBy == getViewType(SendBy.TYPING)) {
                 typingIndicator.apply {
                     visibility = View.VISIBLE
                     startFlipping()

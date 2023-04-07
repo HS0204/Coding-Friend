@@ -13,19 +13,15 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import hs.project.cof.R
-import hs.project.cof.base.ApplicationClass
-import hs.project.cof.base.ApplicationClass.Companion.RESET
-import hs.project.cof.base.ApplicationClass.Companion.TEMPERATURE
-import hs.project.cof.base.ApplicationClass.Companion.VERSION
+import hs.project.cof.base.ApplicationClass.Companion.DialogType
+import hs.project.cof.base.ApplicationClass.Companion.getDialogType
 import hs.project.cof.presentation.viewModel.ChatViewModelFactory
 import hs.project.cof.presentation.viewModel.ChatViewModel
 
 class SettingDialogFragment() : DialogFragment() {
 
     private val viewModel: ChatViewModel by activityViewModels {
-        ChatViewModelFactory(
-            (activity?.application as ApplicationClass).database.MessageListDao()
-        )
+        ChatViewModelFactory()
     }
     private lateinit var type: String
     private lateinit var builder: AlertDialog.Builder
@@ -58,7 +54,7 @@ class SettingDialogFragment() : DialogFragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun buildBuilder() {
         when(type) {
-            VERSION -> {
+            getDialogType(DialogType.VERSION) -> {
                 builder.setTitle("버전을 설정해주세요")
                     .setItems(
                         R.array.version_array,
@@ -69,7 +65,7 @@ class SettingDialogFragment() : DialogFragment() {
                             viewModel.setModel(selectedValue, selectedVersion)
                         })
             }
-            TEMPERATURE -> {
+            getDialogType(DialogType.TEMPERATURE) -> {
                 val seekBar = SeekBar(context).apply {
                     max = 20
                     min = 0
@@ -113,7 +109,7 @@ class SettingDialogFragment() : DialogFragment() {
                         viewModel.setTemperature(seekBar.progress)
                     }
             }
-            RESET -> {
+            getDialogType(DialogType.RESET) -> {
                 builder.setTitle("채팅 내용을 지우시겠습니까?")
                     .setNegativeButton("아니오") { _, _ -> }
                     .setPositiveButton("예") { _, _ -> viewModel.clearMessageList() }
