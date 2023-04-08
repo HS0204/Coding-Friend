@@ -68,7 +68,6 @@ class ChatViewModel() : ViewModel() {
 
     fun clearMessageList() {
         _apiStatus.value = MessageApiStatus.NONESTARTED
-        _viewModeStatus.value = ViewModeStatus.CHAT
         _messageList.value = ArrayList<Message>()
     }
 
@@ -81,7 +80,6 @@ class ChatViewModel() : ViewModel() {
     }
 
     fun retrieveMessageListFromList(msgList: List<Message>) {
-        _viewModeStatus.value = ViewModeStatus.LOG
         _messageList.value = msgList.toMutableList()
     }
 

@@ -23,7 +23,6 @@ import hs.project.cof.presentation.viewModel.ChatListViewModel
 import hs.project.cof.presentation.viewModel.ChatListViewModelFactory
 import hs.project.cof.presentation.viewModel.ChatViewModelFactory
 import hs.project.cof.presentation.viewModel.ChatViewModel
-import java.text.SimpleDateFormat
 import java.util.*
 
 class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::inflate) {
@@ -79,7 +78,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
                 }
                 ChatViewModel.MessageApiStatus.NONESTARTED -> {}
                 else -> {   // DONE or ERROR
-                    if (chatViewModel.messageList.value!!.size > 0 && argsFromList.chatListId != 0) {
+                    if (chatViewModel.messageList.value!!.size > 0 && chatViewModel.viewModeStatus.value == ChatViewModel.ViewModeStatus.LOG) {
                         listViewModel.updateChatList(argsFromList.chatListId, currentTimeMillis, chatViewModel.messageList.value!!)
                     }
                 }
@@ -154,6 +153,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
 
     private fun resetBtnListener() {
         binding.mainActionbarResetIb.setOnClickListener {
+            chatViewModel.setViewModeStatus(ChatViewModel.ViewModeStatus.CHAT)
             val dialogFragment = SettingDialogFragment.newInstance(getDialogType(DialogType.RESET))
             dialogFragment.show(childFragmentManager, "reset_check_dialog")
         }
