@@ -3,6 +3,7 @@ package hs.project.cof.presentation.view
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
@@ -96,9 +97,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
     override fun onStart() {
         super.onStart()
 
-        argsFromList.retrieveChatList?.let {
-            retrieveMessageList()
-        }
+        retrieveMessageList()
     }
 
     private fun setAdapter() {
@@ -111,9 +110,11 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
 
     private fun retrieveMessageList() {
         chatViewModel.clearMessageList()
-        argsFromList.retrieveChatList?.chatList?.let {
-            chatViewModel.retrieveMessageListFromList(it)
-            messageAdapter.setMessageList(it)
+        argsFromList.retrieveChatListId.let {id ->
+            listViewModel.retrieveChatList(id).observe(this.viewLifecycleOwner) {
+                it?.chatList?.let { it1 -> chatViewModel.retrieveMessageListFromList(it1) }
+                chatViewModel.messageList.value?.let { it1 -> messageAdapter.setMessageList(it1) }
+            }
         }
     }
 

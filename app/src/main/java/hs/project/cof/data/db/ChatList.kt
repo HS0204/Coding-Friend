@@ -18,7 +18,7 @@ data class ChatList(
     val title: String,
     val version: String,
     @ColumnInfo(name = "chatting_list")
-    val chatList: List<Message>?
+    val chatList: List<Message>
 ) : Parcelable
 
 class ChatListConverters {

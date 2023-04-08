@@ -38,8 +38,8 @@ class ChatListFragment : BaseFragment<FragmentChatListBinding>(FragmentChatListB
 
     private fun setAdapter() {
 
-        chatListAdapter = ChatListAdapter { chatList ->
-            val action = ChatListFragmentDirections.actionChatListFragmentToChatFragment(chatList)
+        chatListAdapter = ChatListAdapter { chatListId ->
+            val action = ChatListFragmentDirections.actionChatListFragmentToChatFragment(chatListId)
             findNavController().navigate(action)
         }
         binding.chatListRv.adapter = chatListAdapter

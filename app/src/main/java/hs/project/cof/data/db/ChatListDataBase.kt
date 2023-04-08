@@ -1,12 +1,13 @@
 package hs.project.cof.data.db
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import androidx.room.*
 
-@Database(entities = [ChatList::class], version = 1, exportSchema = false)
+@Database(
+    entities = [ChatList::class],
+    version = 3,
+    autoMigrations = [AutoMigration(from = 1, to = 2), AutoMigration(from = 2, to = 3)]
+)
 @TypeConverters(ChatListConverters::class)
 abstract class ChatListDataBase : RoomDatabase() {
 

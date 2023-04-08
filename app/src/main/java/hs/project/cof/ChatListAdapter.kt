@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import hs.project.cof.data.db.ChatList
 import hs.project.cof.databinding.ItemChatListBinding
 
-class ChatListAdapter(private val onItemClicked: (ChatList) -> Unit) : ListAdapter<ChatList, ChatListAdapter.ChatListViewHolder>(DiffCallback) {
+class ChatListAdapter(private val onItemClicked: (Int) -> Unit) : ListAdapter<ChatList, ChatListAdapter.ChatListViewHolder>(DiffCallback) {
 
     private var chatList = listOf<ChatList>()
 
@@ -24,7 +24,7 @@ class ChatListAdapter(private val onItemClicked: (ChatList) -> Unit) : ListAdapt
         viewHolder.itemView.setOnClickListener {
             val position = viewHolder.adapterPosition
 
-            onItemClicked(chatList[position])
+            onItemClicked(chatList[position].id)
         }
         return viewHolder
     }

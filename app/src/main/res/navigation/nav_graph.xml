@@ -16,10 +16,9 @@
             android:id="@+id/action_chatFragment_to_chatListFragment"
             app:destination="@id/chatListFragment" />
         <argument
-            android:name="retrieveChatList"
-            app:argType="hs.project.cof.data.db.ChatList"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            android:name="retrieveChatListId"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/settingFragment"
