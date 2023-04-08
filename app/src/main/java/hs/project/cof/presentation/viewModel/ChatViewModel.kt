@@ -71,6 +71,10 @@ class ChatViewModel() : ViewModel() {
         _messageList.value = ArrayList<Message>()
     }
 
+    fun setViewModeStatus(mode: ViewModeStatus) {
+        _viewModeStatus.value = mode
+    }
+
     fun retrieveMessageListFromList(msgList: List<Message>) {
         _viewModeStatus.value = ViewModeStatus.LOG
         _messageList.value = msgList.toMutableList()

@@ -16,7 +16,7 @@
             android:id="@+id/action_chatFragment_to_chatListFragment"
             app:destination="@id/chatListFragment" />
         <argument
-            android:name="retrieveChatListId"
+            android:name="chatListId"
             app:argType="integer"
             android:defaultValue="0" />
     </fragment>

@@ -3,7 +3,6 @@ package hs.project.cof.presentation.view
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
@@ -36,7 +35,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         )
     }
 
-    private val argsFromList by navArgs<ChatFragmentArgs>()
+    private val argsFromList: ChatFragmentArgs by navArgs()
     private lateinit var messageAdapter: MessageAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,6 +73,11 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
             }
         })
 
+        // check view mode
+        if (chatViewModel.viewModeStatus.value == ChatViewModel.ViewModeStatus.LOG && argsFromList.chatListId != 0) {
+            retrieveMessageList()
+        }
+
         sendMessageListener()
         resetBtnListener()
         chatListBtnListener()
@@ -94,12 +98,6 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        retrieveMessageList()
-    }
-
     private fun setAdapter() {
         messageAdapter = MessageAdapter(requireContext())
         binding.mainChatRv.adapter = messageAdapter
@@ -110,7 +108,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
 
     private fun retrieveMessageList() {
         chatViewModel.clearMessageList()
-        argsFromList.retrieveChatListId.let {id ->
+        argsFromList.chatListId.let { id ->
             listViewModel.retrieveChatList(id).observe(this.viewLifecycleOwner) {
                 it?.chatList?.let { it1 -> chatViewModel.retrieveMessageListFromList(it1) }
                 chatViewModel.messageList.value?.let { it1 -> messageAdapter.setMessageList(it1) }

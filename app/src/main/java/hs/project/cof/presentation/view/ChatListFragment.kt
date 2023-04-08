@@ -12,12 +12,19 @@ import hs.project.cof.base.BaseFragment
 import hs.project.cof.databinding.FragmentChatListBinding
 import hs.project.cof.presentation.viewModel.ChatListViewModel
 import hs.project.cof.presentation.viewModel.ChatListViewModelFactory
+import hs.project.cof.presentation.viewModel.ChatViewModel
+import hs.project.cof.presentation.viewModel.ChatViewModelFactory
 import kotlinx.coroutines.launch
 
 
 class ChatListFragment : BaseFragment<FragmentChatListBinding>(FragmentChatListBinding::inflate) {
 
-    private val viewModel: ChatListViewModel by activityViewModels {
+
+    private val chatViewModel: ChatViewModel by activityViewModels {
+        ChatViewModelFactory()
+    }
+
+    private val listViewModel: ChatListViewModel by activityViewModels {
         ChatListViewModelFactory(
             (activity?.application as ApplicationClass).database.ChatListDao()
         )
@@ -30,7 +37,7 @@ class ChatListFragment : BaseFragment<FragmentChatListBinding>(FragmentChatListB
 
         // set viewModel
         binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+        binding.viewModel = listViewModel
 
         setAdapter()
 
@@ -38,16 +45,16 @@ class ChatListFragment : BaseFragment<FragmentChatListBinding>(FragmentChatListB
 
     private fun setAdapter() {
 
-        chatListAdapter = ChatListAdapter { chatListId ->
+        chatListAdapter = ChatListAdapter(onItemClicked = { chatListId ->
             val action = ChatListFragmentDirections.actionChatListFragmentToChatFragment(chatListId)
             findNavController().navigate(action)
-        }
+        }, viewModel = chatViewModel)
         binding.chatListRv.adapter = chatListAdapter
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.chatListRv.layoutManager = layoutManager
 
         lifecycle.coroutineScope.launch {
-            viewModel.getAllChatList().collect() {
+            listViewModel.getAllChatList().collect() {
                 chatListAdapter.setChatList(it)
             }
         }
