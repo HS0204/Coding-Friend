@@ -1,6 +1,5 @@
 package hs.project.cof.presentation.viewModel
 
-import android.util.Log
 import androidx.lifecycle.*
 import hs.project.cof.data.db.ChatList
 import hs.project.cof.data.db.ChatListDao
@@ -23,7 +22,6 @@ class ChatListViewModel(private val msgListDao: ChatListDao) : ViewModel() {
 
     fun updateChatList(id: Int, modDate: Long, chatList: List<Message>) {
         viewModelScope.launch {
-            Log.d("UPDATE_TEST", "UPDATE LIST :: ${chatList}")
             msgListDao.update(id, modDate, chatList)
         }
     }

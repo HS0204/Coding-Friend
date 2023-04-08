@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import hs.project.cof.data.db.ChatList
 import hs.project.cof.databinding.ItemChatListBinding
 import hs.project.cof.presentation.viewModel.ChatViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ChatListAdapter(private val onItemClicked: (Int) -> Unit, private val viewModel: ChatViewModel) : ListAdapter<ChatList, ChatListAdapter.ChatListViewHolder>(DiffCallback) {
 
@@ -53,11 +55,13 @@ class ChatListAdapter(private val onItemClicked: (Int) -> Unit, private val view
         var modDate = binding.itemChatListDateModTv
 
         fun bind(item: ChatList, position: Int) {
+            val dateFormat = SimpleDateFormat("yy.MM.dd HH:mm")
+
             num.text = position.plus(1).toString()
             title.text = item.title
             version.text = item.version
-            redDate.text = item.regDate.toString()
-            modDate.text = item.modDate.toString()
+            redDate.text = dateFormat.format(Date(item.regDate))
+            modDate.text = dateFormat.format(Date(item.modDate))
         }
     }
 

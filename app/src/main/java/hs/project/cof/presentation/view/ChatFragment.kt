@@ -1,7 +1,6 @@
 package hs.project.cof.presentation.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.activityViewModels
@@ -24,6 +23,8 @@ import hs.project.cof.presentation.viewModel.ChatListViewModel
 import hs.project.cof.presentation.viewModel.ChatListViewModelFactory
 import hs.project.cof.presentation.viewModel.ChatViewModelFactory
 import hs.project.cof.presentation.viewModel.ChatViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::inflate) {
 
@@ -35,6 +36,9 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
             (activity?.application as ApplicationClass).database.ChatListDao()
         )
     }
+
+    private val currentDate = Date()
+    private val currentTimeMillis = currentDate.time
 
     private val argsFromList: ChatFragmentArgs by navArgs()
     private lateinit var messageAdapter: MessageAdapter
@@ -76,7 +80,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
                 ChatViewModel.MessageApiStatus.NONESTARTED -> {}
                 else -> {   // DONE or ERROR
                     if (chatViewModel.messageList.value!!.size > 0 && argsFromList.chatListId != 0) {
-                        listViewModel.updateChatList(argsFromList.chatListId, 1L, chatViewModel.messageList.value!!)
+                        listViewModel.updateChatList(argsFromList.chatListId, currentTimeMillis, chatViewModel.messageList.value!!)
                     }
                 }
             }
@@ -97,8 +101,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
          */
         binding.mainActionbarChatSaveIb.setOnClickListener {
             val chatList = ChatList(
-                regDate = 0L,
-                modDate = 0L,
+                regDate = currentTimeMillis,
+                modDate = currentTimeMillis,
                 title = chatViewModel.messageList.value!![0].message,
                 version = getViewName(chatViewModel.messageList.value!![0].sendBy),
                 chatList = chatViewModel.messageList.value.orEmpty().toList()
@@ -120,7 +124,6 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         argsFromList.chatListId.let { id ->
             listViewModel.retrieveChatList(id).observe(this.viewLifecycleOwner) {
                 chatViewModel.retrieveMessageListFromList(it.chatList)
-                chatViewModel.setMessageList(it.chatList)
             }
         }
     }
@@ -129,12 +132,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         binding.mainInputMsgBtn.setOnClickListener {
             val question = binding.mainInputMsgEt.text.toString().trim()
             // receive message from user
-            chatViewModel.addMessage(
-                Message(
-                    question,
-                    getViewType(SendBy.USER)
-                )
-            )
+            chatViewModel.addMessage(Message(question, getViewType(SendBy.USER)))
             // request api
             chatViewModel.getMessageFromChatGPT(question)
 
