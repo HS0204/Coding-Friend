@@ -1,5 +1,6 @@
 package hs.project.cof.presentation.viewModel
 
+import android.util.Log
 import androidx.lifecycle.*
 import hs.project.cof.BuildConfig
 import hs.project.cof.base.ApplicationClass.Companion.getChatModel
@@ -73,6 +74,10 @@ class ChatViewModel() : ViewModel() {
 
     fun setViewModeStatus(mode: ViewModeStatus) {
         _viewModeStatus.value = mode
+    }
+
+    fun setMessageList(msgList: List<Message>) {
+        _messageList.value = msgList.toMutableList()
     }
 
     fun retrieveMessageListFromList(msgList: List<Message>) {

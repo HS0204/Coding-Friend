@@ -1,6 +1,7 @@
 package hs.project.cof.presentation.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.activityViewModels
@@ -68,8 +69,16 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
 
         // observe api status changes
         chatViewModel.apiStatus.observe(viewLifecycleOwner, Observer { apiStatus ->
-            if (apiStatus.equals(ChatViewModel.MessageApiStatus.LOADING)) {
-                chatViewModel.addTypingMessage()
+            when (apiStatus) {
+                ChatViewModel.MessageApiStatus.LOADING -> {
+                    chatViewModel.addTypingMessage()
+                }
+                ChatViewModel.MessageApiStatus.NONESTARTED -> {}
+                else -> {   // DONE or ERROR
+                    if (chatViewModel.messageList.value!!.size > 0 && argsFromList.chatListId != 0) {
+                        listViewModel.updateChatList(argsFromList.chatListId, 1L, chatViewModel.messageList.value!!)
+                    }
+                }
             }
         })
 
@@ -110,8 +119,8 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         chatViewModel.clearMessageList()
         argsFromList.chatListId.let { id ->
             listViewModel.retrieveChatList(id).observe(this.viewLifecycleOwner) {
-                it?.chatList?.let { it1 -> chatViewModel.retrieveMessageListFromList(it1) }
-                chatViewModel.messageList.value?.let { it1 -> messageAdapter.setMessageList(it1) }
+                chatViewModel.retrieveMessageListFromList(it.chatList)
+                chatViewModel.setMessageList(it.chatList)
             }
         }
     }
