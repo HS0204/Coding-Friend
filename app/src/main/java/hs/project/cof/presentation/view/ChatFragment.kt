@@ -57,16 +57,20 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
             messageAdapter.setMessageList(messageList)
             binding.mainChatRv.smoothScrollToPosition(if (messageList.size == 0) 0 else messageList.size - 1)
 
-            // reset btn visibility & anim control
+            // reset, save btn visibility & anim control
             if (messageList.isNotEmpty()) {
                 binding.mainActionbarResetIb.visibility = View.VISIBLE
+                binding.mainActionbarChatSaveIb.visibility = View.VISIBLE
+
+                val anim = AnimationUtils.loadAnimation(context, R.anim.bounce)
 
                 if (chatViewModel.apiStatus.value == ChatViewModel.MessageApiStatus.NONESTARTED) {
-                    val anim = AnimationUtils.loadAnimation(context, R.anim.bounce)
                     binding.mainActionbarResetIb.startAnimation(anim)
+                    binding.mainActionbarChatSaveIb.startAnimation(anim)
                 }
             } else {
                 binding.mainActionbarResetIb.visibility = View.GONE
+                binding.mainActionbarChatSaveIb.visibility = View.GONE
             }
         })
 
