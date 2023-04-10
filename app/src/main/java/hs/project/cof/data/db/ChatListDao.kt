@@ -18,6 +18,6 @@ interface ChatListDao {
     @Query("SELECT * FROM chatList WHERE id = :id")
     fun getChatList(id: Int): Flow<ChatList>
 
-    @Query("SELECT * FROM chatList ORDER BY modify_date DESC, id ASC")
+    @Query("SELECT * FROM chatList ORDER BY modify_date DESC, reg_date ASC, id ASC")
     fun getChatLists(): Flow<List<ChatList>>
 }

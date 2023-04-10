@@ -3,6 +3,7 @@ package hs.project.cof.presentation.view
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
@@ -11,12 +12,10 @@ import hs.project.cof.MessageAdapter
 import hs.project.cof.R
 import hs.project.cof.base.ApplicationClass
 import hs.project.cof.base.ApplicationClass.Companion.getViewType
-import hs.project.cof.base.ApplicationClass.Companion.getViewName
 import hs.project.cof.base.ApplicationClass.Companion.SendBy
 import hs.project.cof.base.ApplicationClass.Companion.DialogType
 import hs.project.cof.base.ApplicationClass.Companion.getDialogType
 import hs.project.cof.base.BaseFragment
-import hs.project.cof.data.db.ChatList
 import hs.project.cof.data.remote.model.Message
 import hs.project.cof.databinding.FragmentChatBinding
 import hs.project.cof.presentation.viewModel.ChatListViewModel
@@ -35,9 +34,6 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
             (activity?.application as ApplicationClass).database.ChatListDao()
         )
     }
-
-    private val currentDate = Date()
-    private val currentTimeMillis = currentDate.time
 
     private val argsFromList: ChatFragmentArgs by navArgs()
     private lateinit var messageAdapter: MessageAdapter
@@ -83,7 +79,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
                 ChatViewModel.MessageApiStatus.NONESTARTED -> {}
                 else -> {   // DONE or ERROR
                     if (chatViewModel.messageList.value!!.size > 0 && chatViewModel.viewModeStatus.value == ChatViewModel.ViewModeStatus.LOG) {
-                        listViewModel.updateChatList(argsFromList.chatListId, currentTimeMillis, chatViewModel.messageList.value!!)
+                        listViewModel.updateChatList(argsFromList.chatListId, chatViewModel.messageList.value!!)
                     }
                 }
             }
@@ -103,15 +99,16 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
          * 버튼 클릭해야 저장되는 임시 코드 for 테스트
          */
         binding.mainActionbarChatSaveIb.setOnClickListener {
-            val chatList = ChatList(
-                regDate = currentTimeMillis,
-                modDate = currentTimeMillis,
-                title = chatViewModel.messageList.value!![0].message,
-                version = getViewName(chatViewModel.messageList.value!![0].sendBy),
-                chatList = chatViewModel.messageList.value.orEmpty().toList()
-            )
-            listViewModel.insertChatList(chatList)
+            if (isEntryValid()) {
+                listViewModel.addNewChatList(chatViewModel.messageList.value.orEmpty().toList())
+            } else {
+                Toast.makeText(context, "대화 내용 저장을 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
+    }
+
+    private fun isEntryValid(): Boolean {
+        return listViewModel.isEntryValid(chatViewModel.messageList.value.orEmpty().toList())
     }
 
     private fun setAdapter() {
