@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ViewFlipper
 import androidx.recyclerview.widget.DiffUtil
@@ -73,9 +74,15 @@ class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.V
         notifyDataSetChanged()
     }
 
+    val bounceAnim: Animation = AnimationUtils.loadAnimation(context, R.anim.bounce)
+
     inner class UserViewHolder(binding: ItemChatUserBinding) :
         RecyclerView.ViewHolder(binding.root) {
         var userTxt = binding.itemMsgUserTv
+
+        init {
+            userTxt.startAnimation(bounceAnim)
+        }
 
         fun bind(item: Message) {
             userTxt.text = item.message
@@ -87,9 +94,7 @@ class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.V
         private val typingIndicator: ViewFlipper = binding.typingIndicator
 
         init {
-            val bounceAnim = AnimationUtils.loadAnimation(context, R.anim.bounce)
             chatTxt.startAnimation(bounceAnim)
-
         }
 
         fun bind(item: Message) {
