@@ -64,6 +64,7 @@ class SettingDialogFragment() : DialogFragment() {
                             val selectedVersion = resources.getStringArray(R.array.version_array)[which]
                             viewModel.setModel(selectedValue, selectedVersion)
                         })
+                    .show()
             }
             getDialogType(DialogType.TEMPERATURE) -> {
                 val seekBar = SeekBar(context).apply {
@@ -108,11 +109,13 @@ class SettingDialogFragment() : DialogFragment() {
                     .setPositiveButton("확인") { _, _ ->
                         viewModel.setTemperature(seekBar.progress)
                     }
+                    .show()
             }
             getDialogType(DialogType.RESET) -> {
                 builder.setTitle("채팅 내용을 지우시겠습니까?")
-                    .setNegativeButton("아니오") { _, _ -> }
                     .setPositiveButton("예") { _, _ -> viewModel.clearMessageList() }
+                    .setNegativeButton("아니오", null)
+                    .show()
             }
             else -> {
 

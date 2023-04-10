@@ -45,10 +45,15 @@ class ChatListFragment : BaseFragment<FragmentChatListBinding>(FragmentChatListB
 
     private fun setAdapter() {
 
-        chatListAdapter = ChatListAdapter(onItemClicked = { chatListId ->
-            val action = ChatListFragmentDirections.actionChatListFragmentToChatFragment(chatListId)
-            findNavController().navigate(action)
-        }, viewModel = chatViewModel)
+        chatListAdapter = ChatListAdapter(
+            onItemClicked = { chatListId ->
+                val action =
+                    ChatListFragmentDirections.actionChatListFragmentToChatFragment(chatListId)
+                findNavController().navigate(action)
+            },
+            chatViewModel = chatViewModel,
+            listViewModel = listViewModel
+        )
         binding.chatListRv.adapter = chatListAdapter
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.chatListRv.layoutManager = layoutManager
