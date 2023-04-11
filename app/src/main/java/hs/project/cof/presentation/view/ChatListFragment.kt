@@ -10,10 +10,10 @@ import hs.project.cof.ChatListAdapter
 import hs.project.cof.base.ApplicationClass
 import hs.project.cof.base.BaseFragment
 import hs.project.cof.databinding.FragmentChatListBinding
-import hs.project.cof.presentation.viewModel.ChatListViewModel
-import hs.project.cof.presentation.viewModel.ChatListViewModelFactory
-import hs.project.cof.presentation.viewModel.ChatViewModel
-import hs.project.cof.presentation.viewModel.ChatViewModelFactory
+import hs.project.cof.presentation.viewModels.ChatListViewModel
+import hs.project.cof.presentation.viewModels.ChatListViewModelFactory
+import hs.project.cof.presentation.viewModels.ChatViewModel
+import hs.project.cof.presentation.viewModels.ChatViewModelFactory
 import kotlinx.coroutines.launch
 
 
@@ -59,7 +59,7 @@ class ChatListFragment : BaseFragment<FragmentChatListBinding>(FragmentChatListB
         binding.chatListRv.layoutManager = layoutManager
 
         lifecycle.coroutineScope.launch {
-            listViewModel.getAllChatList().collect() {
+            listViewModel.getAllChatList.collect() {
                 chatListAdapter.setChatList(it)
             }
         }

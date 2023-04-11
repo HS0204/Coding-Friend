@@ -18,10 +18,10 @@ import hs.project.cof.base.ApplicationClass.Companion.getDialogType
 import hs.project.cof.base.BaseFragment
 import hs.project.cof.data.remote.model.Message
 import hs.project.cof.databinding.FragmentChatBinding
-import hs.project.cof.presentation.viewModel.ChatListViewModel
-import hs.project.cof.presentation.viewModel.ChatListViewModelFactory
-import hs.project.cof.presentation.viewModel.ChatViewModelFactory
-import hs.project.cof.presentation.viewModel.ChatViewModel
+import hs.project.cof.presentation.viewModels.ChatListViewModel
+import hs.project.cof.presentation.viewModels.ChatListViewModelFactory
+import hs.project.cof.presentation.viewModels.ChatViewModelFactory
+import hs.project.cof.presentation.viewModels.ChatViewModel
 import java.util.*
 
 class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::inflate) {
@@ -79,7 +79,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
                 ChatViewModel.MessageApiStatus.NONESTARTED -> {}
                 else -> {   // DONE or ERROR
                     if (chatViewModel.messageList.value!!.size > 0 && chatViewModel.viewModeStatus.value == ChatViewModel.ViewModeStatus.LOG) {
-                        listViewModel.updateChatList(argsFromList.chatListId, chatViewModel.messageList.value!!)
+                        listViewModel.addNewMessagesToChatList(argsFromList.chatListId, chatViewModel.messageList.value!!)
                     }
                 }
             }
@@ -122,7 +122,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
     private fun retrieveMessageList() {
         chatViewModel.clearMessageList()
         argsFromList.chatListId.let { id ->
-            listViewModel.retrieveChatList(id).observe(this.viewLifecycleOwner) {
+            listViewModel.getChatList(id).observe(this.viewLifecycleOwner) {
                 chatViewModel.retrieveMessageListFromList(it.chatList)
             }
         }

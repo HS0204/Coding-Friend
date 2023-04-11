@@ -5,11 +5,11 @@
 
         <variable
             name="chatViewModel"
-            type="hs.project.cof.presentation.viewModel.ChatViewModel" />
+            type="hs.project.cof.presentation.viewModels.ChatViewModel" />
 
         <variable
             name="listViewModel"
-            type="hs.project.cof.presentation.viewModel.ChatListViewModel" />
+            type="hs.project.cof.presentation.viewModels.ChatListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

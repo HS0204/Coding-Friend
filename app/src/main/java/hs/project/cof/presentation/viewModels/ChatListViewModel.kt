@@ -1,35 +1,24 @@
-package hs.project.cof.presentation.viewModel
+package hs.project.cof.presentation.viewModels
 
 import androidx.lifecycle.*
 import hs.project.cof.base.ApplicationClass.Companion.getViewName
 import hs.project.cof.data.db.ChatList
 import hs.project.cof.data.db.ChatListDao
 import hs.project.cof.data.remote.model.Message
+import hs.project.cof.repositories.ChatListRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.util.*
 
-class ChatListViewModel(private val msgListDao: ChatListDao) : ViewModel() {
+class ChatListViewModel(private val chatListDao: ChatListDao) : ViewModel() {
 
     private val currentDate = Date()
     private var currentTimeMillis = currentDate.time
-
-    fun isEntryValid(messageList: List<Message>): Boolean {
-        if (messageList.isEmpty()) {
-            return false
-        }
-        return true
-    }
+    private val repository: ChatListRepository = ChatListRepository(chatListDao)
 
     /**
      * CREATE
      */
-    private fun insertChatList(chatList: ChatList) {
-        viewModelScope.launch {
-            msgListDao.insert(chatList)
-        }
-    }
-
     private fun getNewChatList(messageList: List<Message>): ChatList {
         currentTimeMillis = currentDate.time
 
@@ -42,37 +31,46 @@ class ChatListViewModel(private val msgListDao: ChatListDao) : ViewModel() {
         )
     }
 
-    fun addNewChatList(messageList: List<Message>) {
-        val newChatList = getNewChatList(messageList)
-        insertChatList(newChatList)
+    // check valid
+    fun isEntryValid(messageList: List<Message>): Boolean {
+        if (messageList.isEmpty()) {
+            return false
+        }
+        return true
     }
 
+    fun addNewChatList(messageList: List<Message>) {
+        viewModelScope.launch {
+            val newChatList = getNewChatList(messageList)
+            repository.insertChatList(newChatList)
+        }
+    }
 
     /**
      * READ
      */
-    fun getAllChatList(): Flow<List<ChatList>> = msgListDao.getChatLists()
+    val getAllChatList: Flow<List<ChatList>> = repository.getAllChatList
 
-    fun retrieveChatList(id: Int): LiveData<ChatList> {
-        return msgListDao.getChatList(id).asLiveData()
+    fun getChatList(id: Int): LiveData<ChatList> {
+        return repository.selectChatList(id)
     }
 
     /**
      * UPDATE
      */
-    fun updateChatList(id: Int, chatList: List<Message>) {
+    fun addNewMessagesToChatList(id: Int, chatList: List<Message>) {
         currentTimeMillis = currentDate.time
         viewModelScope.launch {
-            msgListDao.update(id, currentTimeMillis, chatList)
+            repository.updateChatList(id, currentDate.time, chatList)
         }
     }
 
     /**
      * DELETE
      */
-    fun deleteChatList(id: Int) {
+    fun removeChatLog(id: Int) {
         viewModelScope.launch {
-            msgListDao.delete(id)
+            repository.deleteChatList(id)
         }
     }
 

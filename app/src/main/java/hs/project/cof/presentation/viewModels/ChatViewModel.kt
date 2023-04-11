@@ -1,8 +1,6 @@
-package hs.project.cof.presentation.viewModel
+package hs.project.cof.presentation.viewModels
 
-import android.util.Log
 import androidx.lifecycle.*
-import hs.project.cof.BuildConfig
 import hs.project.cof.base.ApplicationClass.Companion.getChatModel
 import hs.project.cof.base.ApplicationClass.Companion.getChatVerNm
 import hs.project.cof.base.ApplicationClass.Companion.ChatVersion
@@ -10,6 +8,7 @@ import hs.project.cof.base.ApplicationClass.Companion.SendBy
 import hs.project.cof.base.ApplicationClass.Companion.getViewType
 import hs.project.cof.data.remote.api.ChatGPTAPI
 import hs.project.cof.data.remote.model.*
+import hs.project.cof.repositories.ChatServiceRepository
 import kotlinx.coroutines.launch
 
 class ChatViewModel() : ViewModel() {
@@ -32,6 +31,8 @@ class ChatViewModel() : ViewModel() {
     private var _messageList = MutableLiveData<MutableList<Message>>()
     val messageList: LiveData<MutableList<Message>> = _messageList
 
+    private val repository: ChatServiceRepository = ChatServiceRepository(ChatGPTAPI.retrofitService)
+
     init {
         clearMessageList()
         _model = getChatModel(ChatVersion.CHAT)
@@ -41,9 +42,6 @@ class ChatViewModel() : ViewModel() {
         _viewModeStatus.value = ViewModeStatus.CHAT
     }
 
-    /**
-     * ChatGPT API
-     */
     fun setModel(model: String, version: String) {
         _model = model
         _version.value = version
@@ -83,6 +81,9 @@ class ChatViewModel() : ViewModel() {
         _messageList.value = msgList.toMutableList()
     }
 
+    /**
+     * ChatGPT API
+     */
     fun getMessageFromChatGPT(msg: String) {
         viewModelScope.launch {
             _apiStatus.value = MessageApiStatus.LOADING
@@ -93,15 +94,15 @@ class ChatViewModel() : ViewModel() {
                 when(_model){
                     getChatModel(ChatVersion.CHAT) -> {
                         val chat = ChatRequest(model = getChatModel(ChatVersion.CHAT), messages = listOf(ChatRequestMessage(content = msg, role = "user")), temperature = temperature)
-                        response = Message(ChatGPTAPI.retrofitService.getChatMessage(BuildConfig.API_KEY, chat).choices[0].message.content, getViewType(SendBy.BOT))
+                        response = Message(repository.getChatVerMessage(chat), getViewType(SendBy.BOT))
                     }
                     getChatModel(ChatVersion.EDIT) -> {
                         val edit = EditRequest(model = getChatModel(ChatVersion.EDIT), input = msg, instruction = "Fix the spelling and grammar mistakes", temperature = temperature)
-                        response = Message(ChatGPTAPI.retrofitService.getEditMessage(BuildConfig.API_KEY, edit).choices[0].text.replace("\n", ""), getViewType(SendBy.BOT))
+                        response = Message(repository.getEditVerMessage(edit), getViewType(SendBy.BOT))
                     }
                     getChatModel(ChatVersion.COMPLETION) -> {
                         val completion = CompletionRequest(model = getChatModel(ChatVersion.COMPLETION), prompt = msg, temperature = temperature)
-                        response = Message(ChatGPTAPI.retrofitService.getCompletionMessage(BuildConfig.API_KEY, completion).choices[0].text.replace("\n", ""), getViewType(SendBy.BOT))
+                        response = Message(repository.getCompletionVerMessage(completion), getViewType(SendBy.BOT))
                     }
                     else -> {
                         response = Message("버전에 오류가 있습니다. 설정에서 선택해주세요.", getViewType(SendBy.BOT))

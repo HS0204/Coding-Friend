@@ -5,7 +5,7 @@
 
         <variable
             name="viewModel"
-            type="hs.project.cof.presentation.viewModel.ChatViewModel" />
+            type="hs.project.cof.presentation.viewModels.ChatViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

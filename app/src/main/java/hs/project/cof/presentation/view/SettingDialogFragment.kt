@@ -15,8 +15,8 @@ import androidx.fragment.app.activityViewModels
 import hs.project.cof.R
 import hs.project.cof.base.ApplicationClass.Companion.DialogType
 import hs.project.cof.base.ApplicationClass.Companion.getDialogType
-import hs.project.cof.presentation.viewModel.ChatViewModelFactory
-import hs.project.cof.presentation.viewModel.ChatViewModel
+import hs.project.cof.presentation.viewModels.ChatViewModelFactory
+import hs.project.cof.presentation.viewModels.ChatViewModel
 
 class SettingDialogFragment() : DialogFragment() {
 
@@ -64,7 +64,6 @@ class SettingDialogFragment() : DialogFragment() {
                             val selectedVersion = resources.getStringArray(R.array.version_array)[which]
                             viewModel.setModel(selectedValue, selectedVersion)
                         })
-                    .show()
             }
             getDialogType(DialogType.TEMPERATURE) -> {
                 val seekBar = SeekBar(context).apply {
@@ -109,13 +108,11 @@ class SettingDialogFragment() : DialogFragment() {
                     .setPositiveButton("확인") { _, _ ->
                         viewModel.setTemperature(seekBar.progress)
                     }
-                    .show()
             }
             getDialogType(DialogType.RESET) -> {
                 builder.setTitle("채팅 내용을 지우시겠습니까?")
                     .setPositiveButton("예") { _, _ -> viewModel.clearMessageList() }
                     .setNegativeButton("아니오", null)
-                    .show()
             }
             else -> {
 

@@ -1,6 +1,5 @@
 package hs.project.cof
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -10,8 +9,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import hs.project.cof.data.db.ChatList
 import hs.project.cof.databinding.ItemChatListBinding
-import hs.project.cof.presentation.viewModel.ChatListViewModel
-import hs.project.cof.presentation.viewModel.ChatViewModel
+import hs.project.cof.presentation.viewModels.ChatListViewModel
+import hs.project.cof.presentation.viewModels.ChatViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -80,8 +79,10 @@ class ChatListAdapter(
                 AlertDialog.Builder(itemView.context)
                     .setMessage("'${item.title}' 채팅 기록을 삭제하시겠습니까?")
                     .setPositiveButton("예") { _, _ ->
-                        listViewModel.deleteChatList(item.id)
+                        listViewModel.removeChatLog(item.id)
                         Toast.makeText(itemView.context, "${item.title} 채팅 기록이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                        chatViewModel.clearMessageList()
+                        chatViewModel.setViewModeStatus(ChatViewModel.ViewModeStatus.CHAT)
                     }
                     .setNegativeButton("아니오", null)
                     .show()

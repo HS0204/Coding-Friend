@@ -8,8 +8,8 @@ import hs.project.cof.base.ApplicationClass.Companion.getDialogType
 import hs.project.cof.base.ApplicationClass.Companion.DialogType
 import hs.project.cof.base.BaseFragment
 import hs.project.cof.databinding.FragmentSettingBinding
-import hs.project.cof.presentation.viewModel.ChatViewModelFactory
-import hs.project.cof.presentation.viewModel.ChatViewModel
+import hs.project.cof.presentation.viewModels.ChatViewModelFactory
+import hs.project.cof.presentation.viewModels.ChatViewModel
 
 
 class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
