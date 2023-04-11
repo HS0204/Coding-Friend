@@ -4,18 +4,20 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ViewFlipper
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_LINE
-import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_TYPING
-import hs.project.cof.base.ApplicationClass.Companion.SEND_BY_USER
+import hs.project.cof.base.ApplicationClass.Companion.SendBy
+import hs.project.cof.base.ApplicationClass.Companion.getViewType
 import hs.project.cof.data.remote.model.Message
 import hs.project.cof.databinding.ItemChatBotBinding
 import hs.project.cof.databinding.ItemChatLineBinding
 import hs.project.cof.databinding.ItemChatUserBinding
 
-class MessageAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.ViewHolder>(DiffCallback) {
 
     private var messageList = listOf<Message>()
 
@@ -25,12 +27,12 @@ class MessageAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
     ): RecyclerView.ViewHolder {
 
         return when (viewType) {
-            SEND_BY_USER -> {
+            getViewType(SendBy.USER) -> {
                 val view =
                     ItemChatUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 UserViewHolder(view)
             }
-            SEND_BY_LINE -> {
+            getViewType(SendBy.VERSION) -> {
                 val view =
                     ItemChatLineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 LineViewHolder(view)
@@ -47,10 +49,10 @@ class MessageAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
         val curMsg = messageList[position]
 
         when (curMsg.sendBy) {
-            SEND_BY_USER -> {
+            getViewType(SendBy.USER) -> {
                 (holder as UserViewHolder).bind(curMsg)
             }
-            SEND_BY_LINE -> {
+            getViewType(SendBy.VERSION) -> {
                 (holder as LineViewHolder).bind(curMsg)
             }
             else -> {
@@ -72,9 +74,15 @@ class MessageAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
         notifyDataSetChanged()
     }
 
+    val bounceAnim: Animation = AnimationUtils.loadAnimation(context, R.anim.bounce)
+
     inner class UserViewHolder(binding: ItemChatUserBinding) :
         RecyclerView.ViewHolder(binding.root) {
         var userTxt = binding.itemMsgUserTv
+
+        init {
+            userTxt.startAnimation(bounceAnim)
+        }
 
         fun bind(item: Message) {
             userTxt.text = item.message
@@ -86,15 +94,13 @@ class MessageAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
         private val typingIndicator: ViewFlipper = binding.typingIndicator
 
         init {
-            val bounceAnim = AnimationUtils.loadAnimation(context, R.anim.bounce)
             chatTxt.startAnimation(bounceAnim)
-
         }
 
         fun bind(item: Message) {
             chatTxt.text = item.message
 
-            if (item.sendBy == SEND_BY_TYPING) {
+            if (item.sendBy == getViewType(SendBy.TYPING)) {
                 typingIndicator.apply {
                     visibility = View.VISIBLE
                     startFlipping()
@@ -117,5 +123,18 @@ class MessageAdapter(val context: Context) : RecyclerView.Adapter<RecyclerView.V
             versionTxt.text = item.message
         }
     }
+
+    companion object {
+        private val DiffCallback = object : DiffUtil.ItemCallback<Message>() {
+            override fun areItemsTheSame(oldItem: Message, newItem: Message): Boolean {
+                return oldItem.message == newItem.message
+            }
+
+            override fun areContentsTheSame(oldItem: Message, newItem: Message): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
+
 
 }

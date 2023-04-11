@@ -25,8 +25,8 @@ abstract class BaseFragment<B : ViewBinding>(
     }
 
     override fun onDestroyView() {
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
 
     fun moveFragment(resId: Int) {

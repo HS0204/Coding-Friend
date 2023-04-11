@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
-            name="viewModel"
-            type="hs.project.cof.presentation.viewModel.ChatViewModel" />
+            name="chatViewModel"
+            type="hs.project.cof.presentation.viewModels.ChatViewModel" />
+
+        <variable
+            name="listViewModel"
+            type="hs.project.cof.presentation.viewModels.ChatListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,31 +26,56 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="봇이 메세지를 입력 중 입니다..."
-                    app:sendingTextVisible="@{viewModel.apiStatus}" />
+                <ImageButton
+                    android:id="@+id/main_actionbar_reset_ib"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="4dp"
+                    android:src="@drawable/baseline_refresh_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/main_actionbar_chat_save_ib"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageButton
+                    android:id="@+id/main_actionbar_chat_save_ib"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="4dp"
+                    android:src="@drawable/baseline_save_alt_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/main_actionbar_chat_list_ib"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageButton
+                    android:id="@+id/main_actionbar_chat_list_ib"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:padding="4dp"
+                    android:src="@drawable/baseline_format_list_bulleted_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/main_actionbar_setting_ib"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
                     android:id="@+id/main_actionbar_setting_ib"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_gravity="end"
                     android:layout_marginEnd="10dp"
                     android:background="?attr/selectableItemBackground"
                     android:padding="4dp"
-                    android:src="@drawable/baseline_settings_24" />
+                    android:src="@drawable/baseline_settings_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -55,41 +83,47 @@
             android:id="@+id/main_chat_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_above="@id/main_input_container_cl"
             app:layout_constraintBottom_toTopOf="@id/main_input_container_cl"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/main_actionbar_tb" />
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/main_input_container_cl"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
+            <!--app:inputContainerVisible="@{chatViewModel.ViewModeStatus}"> -->
 
             <EditText
                 android:id="@+id/main_input_msg_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_toLeftOf="@id/main_input_msg_btn"
                 android:background="@drawable/msg_input_bg"
                 android:hint="메세지를 입력하세요"
-                android:padding="15dp" />
+                android:padding="15dp"
+                android:paddingEnd="50dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/main_input_msg_btn"
                 android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
+                android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
-                android:src="@drawable/baseline_send_24" />
+                android:src="@drawable/baseline_send_24"
+                app:layout_constraintBottom_toBottomOf="@id/main_input_msg_et"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/main_input_msg_et" />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

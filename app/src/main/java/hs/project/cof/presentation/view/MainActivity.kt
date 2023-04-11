@@ -1,7 +1,6 @@
 package hs.project.cof.presentation.view
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import hs.project.cof.base.BaseActivity
