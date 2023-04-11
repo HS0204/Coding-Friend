@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:background="@drawable/msg_input_bg"
-            android:backgroundTint="@color/send_msg_user"
+            android:backgroundTint="?attr/colorSecondary"
             android:padding="10dp"
             android:text="유저가 보낸 메세지"
             android:textColor="@color/white" />

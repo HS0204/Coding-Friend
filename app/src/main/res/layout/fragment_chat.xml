@@ -39,7 +39,8 @@
                     android:src="@drawable/baseline_refresh_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/main_actionbar_chat_save_ib"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/colorTertiary" />
 
                 <ImageButton
                     android:id="@+id/main_actionbar_chat_save_ib"
@@ -50,7 +51,9 @@
                     android:src="@drawable/baseline_save_alt_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/main_actionbar_chat_list_ib"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/colorTertiary" />
+
 
                 <ImageButton
                     android:id="@+id/main_actionbar_chat_list_ib"
@@ -61,7 +64,8 @@
                     android:src="@drawable/baseline_format_list_bulleted_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/main_actionbar_setting_ib"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/colorTertiary" />
 
                 <ImageButton
                     android:id="@+id/main_actionbar_setting_ib"
@@ -73,7 +77,9 @@
                     android:src="@drawable/baseline_settings_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/colorTertiary" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -107,6 +113,7 @@
                 android:hint="메세지를 입력하세요"
                 android:padding="15dp"
                 android:paddingEnd="50dp"
+                android:textColorHint="?attr/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -120,7 +127,8 @@
                 android:src="@drawable/baseline_send_24"
                 app:layout_constraintBottom_toBottomOf="@id/main_input_msg_et"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/main_input_msg_et" />
+                app:layout_constraintTop_toTopOf="@id/main_input_msg_et"
+                app:tint="?attr/colorPrimary" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

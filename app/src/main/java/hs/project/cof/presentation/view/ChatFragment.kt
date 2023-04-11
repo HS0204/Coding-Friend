@@ -136,7 +136,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
             // request api
             chatViewModel.getMessageFromChatGPT(question)
 
-            binding.mainInputMsgEt.text.clear()
+            binding.mainInputMsgEt.text?.clear()
         }
     }
 
