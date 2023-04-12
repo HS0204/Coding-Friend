@@ -36,7 +36,6 @@ class ChatListFragment : BaseFragment<FragmentChatListBinding>(FragmentChatListB
 
         // set viewModel
         binding.lifecycleOwner = this
-        binding.chatViewModel = chatViewModel
         binding.listViewModel = listViewModel
 
         setAdapter()

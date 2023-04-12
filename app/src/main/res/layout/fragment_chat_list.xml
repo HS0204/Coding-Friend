@@ -4,10 +4,6 @@
     <data>
 
         <variable
-            name="chatViewModel"
-            type="hs.project.cof.presentation.viewModels.ChatViewModel" />
-
-        <variable
             name="listViewModel"
             type="hs.project.cof.presentation.viewModels.ChatListViewModel" />
     </data>
@@ -21,9 +17,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="저장한 메시지가 없습니다."
             android:gravity="center"
-            app:visibleMessage="@{chatViewModel.messageList.size() > 0 ? false : true}"/>
+            android:text="저장된 메시지 내역이 없습니다."
+            app:isVisible="@{listViewModel.getChatListCount > 0 ? false : true}" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chat_list_rv"
