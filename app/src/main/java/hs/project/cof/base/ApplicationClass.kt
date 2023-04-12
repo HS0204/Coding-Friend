@@ -24,7 +24,8 @@ class ApplicationClass : Application() {
             BOT(1, "Bot"),
             USER(2, "User"),
             VERSION(3, "Version"),
-            TYPING(4, "Typing")
+            TYPING(4, "Typing"),
+            ERROR(5, "Error")
         }
 
         fun getViewType(sendBy: SendBy): Int {
@@ -37,6 +38,7 @@ class ApplicationClass : Application() {
                 SendBy.USER.viewType -> SendBy.USER.viewName
                 SendBy.VERSION.viewType -> SendBy.VERSION.viewName
                 SendBy.TYPING.viewType -> SendBy.TYPING.viewName
+                SendBy.ERROR.viewType -> SendBy.ERROR.viewName
                 else -> ""
             }
         }
@@ -60,7 +62,8 @@ class ApplicationClass : Application() {
         enum class DialogType(val typeNm: String) {
             VERSION("version"),
             TEMPERATURE("temperature"),
-            RESET("reset")
+            RESET("reset"),
+            REPORT("report")
         }
 
         fun getDialogType(dialogType: DialogType): String {
@@ -77,7 +80,7 @@ class ApplicationClass : Application() {
     private fun setRetrofit() {
         val client: OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-            .readTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(20, TimeUnit.SECONDS)
             .build()
 
         retrofit = Retrofit.Builder()

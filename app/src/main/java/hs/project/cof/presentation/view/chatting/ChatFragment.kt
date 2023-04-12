@@ -111,7 +111,12 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
     }
 
     private fun setAdapter() {
-        messageAdapter = MessageAdapter(requireContext())
+        messageAdapter = MessageAdapter(
+            onRetryClicked = {
+                chatViewModel.lastUserMsg.value?.let { requestMsg -> requestToChatGPT(requestMsg) }
+            },
+            context = requireContext(),
+            childFragmentManager =  childFragmentManager)
         binding.mainChatRv.adapter = messageAdapter
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         layoutManager.stackFromEnd
@@ -127,14 +132,19 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         }
     }
 
+    private fun requestToChatGPT(requestMsg: String) {
+        // set current user message
+        chatViewModel.setLastUserMsg(requestMsg)
+        // receive message from user
+        chatViewModel.addMessage(Message(requestMsg, getViewType(SendBy.USER)))
+        // request api
+        chatViewModel.getMessageFromChatGPT(requestMsg)
+    }
+
     private fun sendMessageListener() {
         binding.mainInputMsgBtn.setOnClickListener {
             val question = binding.mainInputMsgEt.text.toString().trim()
-            // receive message from user
-            chatViewModel.addMessage(Message(question, getViewType(SendBy.USER)))
-            // request api
-            chatViewModel.getMessageFromChatGPT(question)
-
+            requestToChatGPT(question)
             binding.mainInputMsgEt.text?.clear()
         }
     }

@@ -114,6 +114,12 @@ class SettingDialogFragment() : DialogFragment() {
                     .setPositiveButton("예") { _, _ -> viewModel.clearMessageList() }
                     .setNegativeButton("아니오", null)
             }
+            getDialogType(DialogType.REPORT) -> {
+                builder.setTitle("개발자에게 신고하시겠습니까?")
+                    .setMessage("현재 신고 기능은 준비 중입니다.")
+                    .setPositiveButton("예", null)
+                    .setNegativeButton("아니오", null)
+            }
             else -> {
 
             }
