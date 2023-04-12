@@ -93,7 +93,7 @@ class ChatViewModel() : ViewModel() {
 
                 when(_model){
                     getChatModel(ChatVersion.CHAT) -> {
-                        val chat = ChatRequest(model = getChatModel(ChatVersion.CHAT), messages = listOf(ChatRequestMessage(content = msg, role = "user")), temperature = temperature)
+                        val chat = ChatRequest(model = getChatModel(ChatVersion.CHAT), messages = getChatRequestMsgList(), temperature = temperature)
                         response = Message(repository.getChatVerMessage(chat), getViewType(SendBy.BOT))
                     }
                     getChatModel(ChatVersion.EDIT) -> {
@@ -120,6 +120,24 @@ class ChatViewModel() : ViewModel() {
                 _apiStatus.value = MessageApiStatus.ERROR
             }
         }
+    }
+
+    private fun getChatRequestMsgList():List<ChatRequestMessage> {
+        val messageList:ArrayList<ChatRequestMessage> = arrayListOf()
+
+        _messageList.value?.groupBy {
+            when (it.sendBy) {
+                getViewType(SendBy.BOT) -> {
+                    messageList.add(ChatRequestMessage(content = it.message, role = "assistant"))
+                }
+                getViewType(SendBy.USER) -> {
+                    messageList.add(ChatRequestMessage(content = it.message, role = "user"))
+                }
+                else -> ""
+            }
+        }
+
+        return messageList
     }
 
 }
