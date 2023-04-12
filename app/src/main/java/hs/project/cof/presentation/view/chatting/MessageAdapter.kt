@@ -1,4 +1,4 @@
-package hs.project.cof
+package hs.project.cof.presentation.view.chatting
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import android.widget.ViewFlipper
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import hs.project.cof.R
 import hs.project.cof.base.ApplicationClass.Companion.SendBy
 import hs.project.cof.base.ApplicationClass.Companion.getViewType
 import hs.project.cof.data.remote.model.Message
@@ -17,7 +18,9 @@ import hs.project.cof.databinding.ItemChatBotBinding
 import hs.project.cof.databinding.ItemChatLineBinding
 import hs.project.cof.databinding.ItemChatUserBinding
 
-class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.ViewHolder>(DiffCallback) {
+class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.ViewHolder>(
+    DiffCallback
+) {
 
     private var messageList = listOf<Message>()
 

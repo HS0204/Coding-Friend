@@ -1,4 +1,4 @@
-package hs.project.cof.presentation.view
+package hs.project.cof.presentation.view.chatting
 
 import android.os.Bundle
 import android.view.View
@@ -8,7 +8,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import hs.project.cof.MessageAdapter
 import hs.project.cof.R
 import hs.project.cof.base.ApplicationClass
 import hs.project.cof.base.ApplicationClass.Companion.getViewType
@@ -22,7 +21,7 @@ import hs.project.cof.presentation.viewModels.ChatListViewModel
 import hs.project.cof.presentation.viewModels.ChatListViewModelFactory
 import hs.project.cof.presentation.viewModels.ChatViewModelFactory
 import hs.project.cof.presentation.viewModels.ChatViewModel
-import java.util.*
+import hs.project.cof.presentation.widget.utils.SettingDialogFragment
 
 class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::inflate) {
 

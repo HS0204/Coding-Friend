@@ -1,4 +1,4 @@
-package hs.project.cof.presentation.view
+package hs.project.cof.presentation.widget.utils
 
 import android.app.Dialog
 import android.content.DialogInterface

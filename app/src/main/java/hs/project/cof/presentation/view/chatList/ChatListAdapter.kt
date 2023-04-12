@@ -1,4 +1,4 @@
-package hs.project.cof
+package hs.project.cof.presentation.view.chatList
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -25,7 +25,7 @@ class ChatListAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ChatListAdapter.ChatListViewHolder {
+    ): ChatListViewHolder {
         val viewHolder = ChatListViewHolder(
             ItemChatListBinding.inflate(
                 LayoutInflater.from(parent.context),

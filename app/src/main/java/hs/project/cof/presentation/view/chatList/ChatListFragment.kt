@@ -1,4 +1,4 @@
-package hs.project.cof.presentation.view
+package hs.project.cof.presentation.view.chatList
 
 import android.os.Bundle
 import android.view.View
@@ -6,7 +6,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.coroutineScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import hs.project.cof.ChatListAdapter
 import hs.project.cof.base.ApplicationClass
 import hs.project.cof.base.BaseFragment
 import hs.project.cof.databinding.FragmentChatListBinding
@@ -37,7 +36,8 @@ class ChatListFragment : BaseFragment<FragmentChatListBinding>(FragmentChatListB
 
         // set viewModel
         binding.lifecycleOwner = this
-        binding.viewModel = listViewModel
+        binding.chatViewModel = chatViewModel
+        binding.listViewModel = listViewModel
 
         setAdapter()
 
