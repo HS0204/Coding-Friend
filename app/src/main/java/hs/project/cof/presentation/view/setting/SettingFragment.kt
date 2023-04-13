@@ -1,4 +1,4 @@
-package hs.project.cof.presentation.view
+package hs.project.cof.presentation.view.setting
 
 import android.os.Bundle
 import android.view.View
@@ -10,6 +10,7 @@ import hs.project.cof.base.BaseFragment
 import hs.project.cof.databinding.FragmentSettingBinding
 import hs.project.cof.presentation.viewModels.ChatViewModelFactory
 import hs.project.cof.presentation.viewModels.ChatViewModel
+import hs.project.cof.presentation.widget.utils.SettingDialogFragment
 
 
 class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {

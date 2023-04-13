@@ -1,5 +1,6 @@
-package hs.project.cof
+package hs.project.cof.presentation.view.chatList
 
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -25,7 +26,7 @@ class ChatListAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ChatListAdapter.ChatListViewHolder {
+    ): ChatListViewHolder {
         val viewHolder = ChatListViewHolder(
             ItemChatListBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -55,7 +56,6 @@ class ChatListAdapter(
         private val container = binding.itemChatListContainerCl
         private val num = binding.itemChatListIdTv
         private val title = binding.itemChatListTitleTv
-        private val version = binding.itemChatListVersionTv
         private val redDate = binding.itemChatListDateRegTv
         private val modDate = binding.itemChatListDateModTv
 
@@ -63,8 +63,11 @@ class ChatListAdapter(
             val dateFormat = SimpleDateFormat("yy.MM.dd HH:mm")
 
             num.text = position.plus(1).toString()
-            title.text = item.title
-            version.text = item.version
+            title.apply {
+                text = item.title
+                isSingleLine = true
+                ellipsize = TextUtils.TruncateAt.END
+            }
             redDate.text = dateFormat.format(Date(item.regDate))
             modDate.text = dateFormat.format(Date(item.modDate))
 

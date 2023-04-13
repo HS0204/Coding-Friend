@@ -31,6 +31,9 @@ class ChatViewModel() : ViewModel() {
     private var _messageList = MutableLiveData<MutableList<Message>>()
     val messageList: LiveData<MutableList<Message>> = _messageList
 
+    private var _lastUserMsg = MutableLiveData<String>()
+    val lastUserMsg: LiveData<String> = _lastUserMsg
+
     private val repository: ChatServiceRepository = ChatServiceRepository(ChatGPTAPI.retrofitService)
 
     init {
@@ -73,8 +76,8 @@ class ChatViewModel() : ViewModel() {
         _viewModeStatus.value = mode
     }
 
-    fun setMessageList(msgList: List<Message>) {
-        _messageList.value = msgList.toMutableList()
+    fun setLastUserMsg(msg: String) {
+        _lastUserMsg.value = msg
     }
 
     fun retrieveMessageListFromList(msgList: List<Message>) {
@@ -89,24 +92,42 @@ class ChatViewModel() : ViewModel() {
             _apiStatus.value = MessageApiStatus.LOADING
             try {
                 val response: Message
-                val temperature = _temperature.value!!.toFloat()/10f
+                val temperature = _temperature.value!!.toFloat() / 10f
 
-                when(_model){
+                when (_model) {
                     getChatModel(ChatVersion.CHAT) -> {
-                        val chat = ChatRequest(model = getChatModel(ChatVersion.CHAT), messages = listOf(ChatRequestMessage(content = msg, role = "user")), temperature = temperature)
-                        response = Message(repository.getChatVerMessage(chat), getViewType(SendBy.BOT))
+                        val chat = ChatRequest(
+                            model = getChatModel(ChatVersion.CHAT),
+                            messages = getChatRequestMsgList(),
+                            temperature = temperature
+                        )
+                        response =
+                            Message(repository.getChatVerMessage(chat), getViewType(SendBy.BOT))
                     }
                     getChatModel(ChatVersion.EDIT) -> {
-                        val edit = EditRequest(model = getChatModel(ChatVersion.EDIT), input = msg, instruction = "Fix the spelling and grammar mistakes", temperature = temperature)
-                        response = Message(repository.getEditVerMessage(edit), getViewType(SendBy.BOT))
+                        val edit = EditRequest(
+                            model = getChatModel(ChatVersion.EDIT),
+                            input = msg,
+                            instruction = "Fix the spelling and grammar mistakes",
+                            temperature = temperature
+                        )
+                        response =
+                            Message(repository.getEditVerMessage(edit), getViewType(SendBy.BOT))
                     }
                     getChatModel(ChatVersion.COMPLETION) -> {
-                        val completion = CompletionRequest(model = getChatModel(ChatVersion.COMPLETION), prompt = msg, temperature = temperature)
-                        response = Message(repository.getCompletionVerMessage(completion), getViewType(SendBy.BOT))
+                        val completion = CompletionRequest(
+                            model = getChatModel(ChatVersion.COMPLETION),
+                            prompt = msg,
+                            temperature = temperature
+                        )
+                        response = Message(
+                            repository.getCompletionVerMessage(completion),
+                            getViewType(SendBy.BOT)
+                        )
                     }
                     else -> {
                         response = Message("버전에 오류가 있습니다. 설정에서 선택해주세요.", getViewType(SendBy.BOT))
-                     }
+                    }
                 }
 
                 if (_messageList.value?.size != 0) {
@@ -116,10 +137,28 @@ class ChatViewModel() : ViewModel() {
                 _apiStatus.value = MessageApiStatus.DONE
             } catch (e: Exception) {
                 removeLastMessage()
-                addMessage(Message("다음 사유로 응답에 실패했습니다.\n\n$e", getViewType(SendBy.BOT)))
+                addMessage(Message("다음 사유로 응답에 실패했습니다.\n\n$e", getViewType(SendBy.ERROR)))
                 _apiStatus.value = MessageApiStatus.ERROR
             }
         }
+    }
+
+    private fun getChatRequestMsgList():List<ChatRequestMessage> {
+        val messageList:ArrayList<ChatRequestMessage> = arrayListOf()
+
+        _messageList.value?.groupBy {
+            when (it.sendBy) {
+                getViewType(SendBy.BOT) -> {
+                    messageList.add(ChatRequestMessage(content = it.message, role = "assistant"))
+                }
+                getViewType(SendBy.USER) -> {
+                    messageList.add(ChatRequestMessage(content = it.message, role = "user"))
+                }
+                else -> ""
+            }
+        }
+
+        return messageList
     }
 
 }

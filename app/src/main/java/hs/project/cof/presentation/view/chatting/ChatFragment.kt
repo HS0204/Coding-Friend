@@ -1,6 +1,7 @@
-package hs.project.cof.presentation.view
+package hs.project.cof.presentation.view.chatting
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
@@ -8,7 +9,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import hs.project.cof.MessageAdapter
 import hs.project.cof.R
 import hs.project.cof.base.ApplicationClass
 import hs.project.cof.base.ApplicationClass.Companion.getViewType
@@ -22,7 +22,7 @@ import hs.project.cof.presentation.viewModels.ChatListViewModel
 import hs.project.cof.presentation.viewModels.ChatListViewModelFactory
 import hs.project.cof.presentation.viewModels.ChatViewModelFactory
 import hs.project.cof.presentation.viewModels.ChatViewModel
-import java.util.*
+import hs.project.cof.presentation.widget.utils.SettingDialogFragment
 
 class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::inflate) {
 
@@ -87,7 +87,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
 
         // check view mode
         if (chatViewModel.viewModeStatus.value == ChatViewModel.ViewModeStatus.LOG && argsFromList.chatListId != 0) {
-            retrieveMessageList()
+            setMessageListOnChatView()
         }
 
         sendMessageListener()
@@ -105,6 +105,12 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
                 Toast.makeText(context, "대화 내용 저장을 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.mainActionbarLogTitleTv.apply {
+            isSingleLine = true
+            isSelected = true
+            ellipsize = TextUtils.TruncateAt.MARQUEE
+        }
     }
 
     private fun isEntryValid(): Boolean {
@@ -112,31 +118,42 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
     }
 
     private fun setAdapter() {
-        messageAdapter = MessageAdapter(requireContext())
+        messageAdapter = MessageAdapter(
+            onRetryClicked = {
+                chatViewModel.lastUserMsg.value?.let { requestMsg -> requestToChatGPT(requestMsg) }
+            },
+            context = requireContext(),
+            childFragmentManager =  childFragmentManager)
         binding.mainChatRv.adapter = messageAdapter
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         layoutManager.stackFromEnd
         binding.mainChatRv.layoutManager = layoutManager
     }
 
-    private fun retrieveMessageList() {
+    private fun setMessageListOnChatView() {
         chatViewModel.clearMessageList()
         argsFromList.chatListId.let { id ->
             listViewModel.getChatList(id).observe(this.viewLifecycleOwner) {
                 chatViewModel.retrieveMessageListFromList(it.chatList)
+                binding.mainActionbarLogTitleTv.text = it.title
             }
         }
+    }
+
+    private fun requestToChatGPT(requestMsg: String) {
+        // set current user message
+        chatViewModel.setLastUserMsg(requestMsg)
+        // receive message from user
+        chatViewModel.addMessage(Message(requestMsg, getViewType(SendBy.USER)))
+        // request api
+        chatViewModel.getMessageFromChatGPT(requestMsg)
     }
 
     private fun sendMessageListener() {
         binding.mainInputMsgBtn.setOnClickListener {
             val question = binding.mainInputMsgEt.text.toString().trim()
-            // receive message from user
-            chatViewModel.addMessage(Message(question, getViewType(SendBy.USER)))
-            // request api
-            chatViewModel.getMessageFromChatGPT(question)
-
-            binding.mainInputMsgEt.text.clear()
+            requestToChatGPT(question)
+            binding.mainInputMsgEt.text?.clear()
         }
     }
 

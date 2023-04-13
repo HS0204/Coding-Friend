@@ -1,4 +1,4 @@
-package hs.project.cof
+package hs.project.cof.presentation.view.chatting
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,17 +7,25 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ViewFlipper
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import hs.project.cof.R
+import hs.project.cof.base.ApplicationClass.Companion.DialogType
 import hs.project.cof.base.ApplicationClass.Companion.SendBy
+import hs.project.cof.base.ApplicationClass.Companion.getDialogType
 import hs.project.cof.base.ApplicationClass.Companion.getViewType
 import hs.project.cof.data.remote.model.Message
 import hs.project.cof.databinding.ItemChatBotBinding
+import hs.project.cof.databinding.ItemChatErrorBinding
 import hs.project.cof.databinding.ItemChatLineBinding
 import hs.project.cof.databinding.ItemChatUserBinding
+import hs.project.cof.presentation.widget.utils.SettingDialogFragment
 
-class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.ViewHolder>(DiffCallback) {
+class MessageAdapter(private val onRetryClicked: (Message) -> Unit,
+                     private val context: Context,
+                     private val childFragmentManager: FragmentManager) : ListAdapter<Message, RecyclerView.ViewHolder>(DiffCallback) {
 
     private var messageList = listOf<Message>()
 
@@ -37,6 +45,11 @@ class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.V
                     ItemChatLineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 LineViewHolder(view)
             }
+            getViewType(SendBy.ERROR) -> {
+                val view =
+                    ItemChatErrorBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ErrorViewHolder(view)
+            }
             else -> {
                 val view =
                     ItemChatBotBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -54,6 +67,9 @@ class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.V
             }
             getViewType(SendBy.VERSION) -> {
                 (holder as LineViewHolder).bind(curMsg)
+            }
+            getViewType(SendBy.ERROR) -> {
+                (holder as ErrorViewHolder).bind(curMsg)
             }
             else -> {
                 (holder as BotViewHolder).bind(curMsg)
@@ -78,7 +94,7 @@ class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.V
 
     inner class UserViewHolder(binding: ItemChatUserBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        var userTxt = binding.itemMsgUserTv
+        private val userTxt = binding.itemMsgUserTv
 
         init {
             userTxt.startAnimation(bounceAnim)
@@ -90,7 +106,7 @@ class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.V
     }
 
     inner class BotViewHolder(binding: ItemChatBotBinding) : RecyclerView.ViewHolder(binding.root) {
-        var chatTxt = binding.itemMsgBotTv
+        private val chatTxt = binding.itemMsgBotTv
         private val typingIndicator: ViewFlipper = binding.typingIndicator
 
         init {
@@ -117,10 +133,37 @@ class MessageAdapter(val context: Context) : ListAdapter<Message, RecyclerView.V
 
     inner class LineViewHolder(binding: ItemChatLineBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        var versionTxt = binding.itemMsgVersionTv
+        private val versionTxt = binding.itemMsgVersionTv
 
         fun bind(item: Message) {
             versionTxt.text = item.message
+        }
+    }
+
+    inner class ErrorViewHolder(binding: ItemChatErrorBinding) : RecyclerView.ViewHolder(binding.root) {
+        private val chatTxt = binding.itemMsgErrorMainTv
+        private val inputContainer = binding.itemMsgErrorInputContainer
+        private val retryBtn = binding.itemMsgErrorRetryBtn
+        private val reportBtn = binding.itemMsgErrorReportBtn
+
+        init {
+            chatTxt.startAnimation(bounceAnim)
+            inputContainer.startAnimation(bounceAnim)
+        }
+
+        fun bind(item: Message) {
+            chatTxt.text = item.message
+
+            retryBtn.setOnClickListener {
+                it.isEnabled = false
+                onRetryClicked(item)
+            }
+
+            reportBtn.setOnClickListener {
+                it.isEnabled = false
+                val dialogFragment = SettingDialogFragment.newInstance(getDialogType(DialogType.REPORT))
+                dialogFragment.show(childFragmentManager, "report_error_to_developer_dialog")
+            }
         }
     }
 

@@ -11,7 +11,7 @@
         android:layout_height="1dp"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:background="@color/black" />
+        android:background="?attr/colorTertiary" />
 
     <TextView
         android:id="@+id/item_msg_version_tv"
@@ -21,6 +21,7 @@
         android:gravity="center"
         android:paddingHorizontal="3dp"
         android:text="다음 버전으로 동작합니다."
+        android:textColor="?attr/colorTertiary"
         android:textSize="13sp" />
 
     <View
@@ -28,6 +29,6 @@
         android:layout_height="1dp"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:background="@color/black" />
+        android:background="?attr/colorTertiary" />
 
 </LinearLayout>

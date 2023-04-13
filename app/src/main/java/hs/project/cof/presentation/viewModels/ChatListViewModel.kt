@@ -50,6 +50,7 @@ class ChatListViewModel(private val chatListDao: ChatListDao) : ViewModel() {
      * READ
      */
     val getAllChatList: Flow<List<ChatList>> = repository.getAllChatList
+    val getChatListCount: LiveData<Int> = repository.getChatListCount
 
     fun getChatList(id: Int): LiveData<ChatList> {
         return repository.selectChatList(id)

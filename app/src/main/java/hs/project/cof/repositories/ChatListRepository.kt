@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 class ChatListRepository(private val chatListDao: ChatListDao) {
 
     val getAllChatList: Flow<List<ChatList>> = chatListDao.getAllChatList()
+    val getChatListCount: LiveData<Int> = chatListDao.getAllChatListCount()
 
     fun selectChatList(id: Int): LiveData<ChatList> {
         return chatListDao.getChatList(id).asLiveData()
