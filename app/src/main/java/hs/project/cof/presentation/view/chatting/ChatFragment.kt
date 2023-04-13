@@ -1,6 +1,7 @@
 package hs.project.cof.presentation.view.chatting
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
@@ -86,7 +87,7 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
 
         // check view mode
         if (chatViewModel.viewModeStatus.value == ChatViewModel.ViewModeStatus.LOG && argsFromList.chatListId != 0) {
-            retrieveMessageList()
+            setMessageListOnChatView()
         }
 
         sendMessageListener()
@@ -103,6 +104,12 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
             } else {
                 Toast.makeText(context, "대화 내용 저장을 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        binding.mainActionbarLogTitleTv.apply {
+            isSingleLine = true
+            isSelected = true
+            ellipsize = TextUtils.TruncateAt.MARQUEE
         }
     }
 
@@ -123,11 +130,12 @@ class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::infl
         binding.mainChatRv.layoutManager = layoutManager
     }
 
-    private fun retrieveMessageList() {
+    private fun setMessageListOnChatView() {
         chatViewModel.clearMessageList()
         argsFromList.chatListId.let { id ->
             listViewModel.getChatList(id).observe(this.viewLifecycleOwner) {
                 chatViewModel.retrieveMessageListFromList(it.chatList)
+                binding.mainActionbarLogTitleTv.text = it.title
             }
         }
     }

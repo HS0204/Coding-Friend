@@ -10,11 +10,12 @@
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryContainer</item>
         <!-- Customize your theme here. -->
     </style>
 
     <style name="Theme.CustomMaterial3" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:statusBarColor">?attr/colorPrimaryContainer</item>
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>

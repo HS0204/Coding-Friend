@@ -7,7 +7,6 @@ import androidx.databinding.BindingAdapter
 
 @BindingAdapter("isVisible")
 fun isVisible(textView: TextView, isVisible: Boolean) {
-    Log.d("CHECK_VISIBLE","$isVisible")
     if (isVisible) {
         textView.visibility = View.VISIBLE
     } else {

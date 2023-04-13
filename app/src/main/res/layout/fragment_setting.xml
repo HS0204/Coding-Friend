@@ -41,7 +41,7 @@
                 android:layout_marginStart="10dp"
                 android:text="현재 : 버전"
                 android:textSize="13sp"
-                android:textColor="@color/send_msg_user"
+                android:textColor="?attr/colorTertiary"
                 app:layout_constraintBottom_toBottomOf="@id/setting_version_header_tv"
                 app:layout_constraintStart_toEndOf="@id/setting_version_header_tv"
                 app:layout_constraintTop_toTopOf="@id/setting_version_header_tv" />
@@ -61,7 +61,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/send_msg_user" />
+            android:background="?attr/colorTertiary" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/setting_temperature_container_cl"
@@ -96,7 +96,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/send_msg_user" />
+            android:background="?attr/colorTertiary" />
 
     </LinearLayout>
 </layout>
