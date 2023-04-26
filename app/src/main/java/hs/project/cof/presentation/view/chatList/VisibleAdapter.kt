@@ -1,6 +1,5 @@
 package hs.project.cof.presentation.view.chatList
 
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter

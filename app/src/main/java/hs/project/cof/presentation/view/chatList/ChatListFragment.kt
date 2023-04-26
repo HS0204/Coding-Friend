@@ -12,16 +12,13 @@ import hs.project.cof.databinding.FragmentChatListBinding
 import hs.project.cof.presentation.viewModels.ChatListViewModel
 import hs.project.cof.presentation.viewModels.ChatListViewModelFactory
 import hs.project.cof.presentation.viewModels.ChatViewModel
-import hs.project.cof.presentation.viewModels.ChatViewModelFactory
 import kotlinx.coroutines.launch
 
 
 class ChatListFragment : BaseFragment<FragmentChatListBinding>(FragmentChatListBinding::inflate) {
 
 
-    private val chatViewModel: ChatViewModel by activityViewModels {
-        ChatViewModelFactory()
-    }
+    private val chatViewModel: ChatViewModel by activityViewModels()
 
     private val listViewModel: ChatListViewModel by activityViewModels {
         ChatListViewModelFactory(

@@ -16,7 +16,7 @@ import hs.project.cof.base.ApplicationClass.Companion.DialogType
 import hs.project.cof.base.ApplicationClass.Companion.SendBy
 import hs.project.cof.base.ApplicationClass.Companion.getDialogType
 import hs.project.cof.base.ApplicationClass.Companion.getViewType
-import hs.project.cof.data.remote.model.Message
+import hs.project.cof.data.model.Message
 import hs.project.cof.databinding.ItemChatBotBinding
 import hs.project.cof.databinding.ItemChatErrorBinding
 import hs.project.cof.databinding.ItemChatLineBinding

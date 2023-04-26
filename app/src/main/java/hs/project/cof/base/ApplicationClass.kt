@@ -1,24 +1,15 @@
 package hs.project.cof.base
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 import hs.project.cof.data.db.ChatListDataBase
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
+@HiltAndroidApp
 class ApplicationClass : Application() {
 
     val database: ChatListDataBase by lazy { ChatListDataBase.getDatabase(this) }
 
     companion object {
-        // 서버 주소
-        const val URL = "https://api.openai.com"
-
-        // Retrofit
-        lateinit var retrofit: Retrofit
-
         // 발신자 분류
         enum class SendBy(val viewType: Int, val viewName: String) {
             BOT(1, "Bot"),
@@ -69,25 +60,6 @@ class ApplicationClass : Application() {
         fun getDialogType(dialogType: DialogType): String {
             return dialogType.typeNm
         }
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-
-        setRetrofit()
-    }
-
-    private fun setRetrofit() {
-        val client: OkHttpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-            .readTimeout(20, TimeUnit.SECONDS)
-            .build()
-
-        retrofit = Retrofit.Builder()
-            .baseUrl(URL)
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
     }
 
 }

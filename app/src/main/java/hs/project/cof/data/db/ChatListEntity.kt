@@ -3,7 +3,7 @@ package hs.project.cof.data.db
 import android.os.Parcelable
 import androidx.room.*
 import com.google.gson.Gson
-import hs.project.cof.data.remote.model.Message
+import hs.project.cof.data.model.Message
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

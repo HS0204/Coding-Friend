@@ -1,17 +1,25 @@
 package hs.project.cof.presentation.viewModels
 
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import hs.project.cof.base.ApplicationClass.Companion.getChatModel
 import hs.project.cof.base.ApplicationClass.Companion.getChatVerNm
 import hs.project.cof.base.ApplicationClass.Companion.ChatVersion
 import hs.project.cof.base.ApplicationClass.Companion.SendBy
 import hs.project.cof.base.ApplicationClass.Companion.getViewType
-import hs.project.cof.data.remote.api.ChatGPTAPI
-import hs.project.cof.data.remote.model.*
-import hs.project.cof.repositories.ChatServiceRepository
+import hs.project.cof.data.model.ChatRequest
+import hs.project.cof.data.model.ChatRequestMessage
+import hs.project.cof.data.model.CompletionRequest
+import hs.project.cof.data.model.EditRequest
+import hs.project.cof.data.model.Message
+import hs.project.cof.data.repository.ChatServiceRepository
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ChatViewModel() : ViewModel() {
+@HiltViewModel
+class ChatViewModel @Inject constructor(
+    private val repository: ChatServiceRepository
+) : ViewModel() {
 
     enum class MessageApiStatus { NONESTARTED, LOADING, ERROR, DONE }
     enum class ViewModeStatus {CHAT, LOG}
@@ -33,8 +41,6 @@ class ChatViewModel() : ViewModel() {
 
     private var _lastUserMsg = MutableLiveData<String>()
     val lastUserMsg: LiveData<String> = _lastUserMsg
-
-    private val repository: ChatServiceRepository = ChatServiceRepository(ChatGPTAPI.retrofitService)
 
     init {
         clearMessageList()
@@ -101,8 +107,7 @@ class ChatViewModel() : ViewModel() {
                             messages = getChatRequestMsgList(),
                             temperature = temperature
                         )
-                        response =
-                            Message(repository.getChatVerMessage(chat), getViewType(SendBy.BOT))
+                        response = Message(repository.getChatVerMessage(chat), getViewType(SendBy.BOT))
                     }
                     getChatModel(ChatVersion.EDIT) -> {
                         val edit = EditRequest(
@@ -111,8 +116,7 @@ class ChatViewModel() : ViewModel() {
                             instruction = "Fix the spelling and grammar mistakes",
                             temperature = temperature
                         )
-                        response =
-                            Message(repository.getEditVerMessage(edit), getViewType(SendBy.BOT))
+                        response = Message(repository.getEditVerMessage(edit), getViewType(SendBy.BOT))
                     }
                     getChatModel(ChatVersion.COMPLETION) -> {
                         val completion = CompletionRequest(
@@ -120,9 +124,7 @@ class ChatViewModel() : ViewModel() {
                             prompt = msg,
                             temperature = temperature
                         )
-                        response = Message(
-                            repository.getCompletionVerMessage(completion),
-                            getViewType(SendBy.BOT)
+                        response = Message(repository.getCompletionVerMessage(completion), getViewType(SendBy.BOT)
                         )
                     }
                     else -> {
@@ -161,14 +163,4 @@ class ChatViewModel() : ViewModel() {
         return messageList
     }
 
-}
-
-class ChatViewModelFactory() : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(ChatViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return ChatViewModel() as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
 }

@@ -16,19 +16,16 @@ import hs.project.cof.base.ApplicationClass.Companion.SendBy
 import hs.project.cof.base.ApplicationClass.Companion.DialogType
 import hs.project.cof.base.ApplicationClass.Companion.getDialogType
 import hs.project.cof.base.BaseFragment
-import hs.project.cof.data.remote.model.Message
+import hs.project.cof.data.model.Message
 import hs.project.cof.databinding.FragmentChatBinding
 import hs.project.cof.presentation.viewModels.ChatListViewModel
 import hs.project.cof.presentation.viewModels.ChatListViewModelFactory
-import hs.project.cof.presentation.viewModels.ChatViewModelFactory
 import hs.project.cof.presentation.viewModels.ChatViewModel
 import hs.project.cof.presentation.widget.utils.SettingDialogFragment
 
 class ChatFragment : BaseFragment<FragmentChatBinding>(FragmentChatBinding::inflate) {
 
-    private val chatViewModel: ChatViewModel by activityViewModels {
-        ChatViewModelFactory()
-    }
+    private val chatViewModel: ChatViewModel by activityViewModels()
     private val listViewModel: ChatListViewModel by activityViewModels {
         ChatListViewModelFactory(
             (activity?.application as ApplicationClass).database.ChatListDao()

@@ -2,7 +2,7 @@ package hs.project.cof.data.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import hs.project.cof.data.remote.model.Message
+import hs.project.cof.data.model.Message
 import kotlinx.coroutines.flow.Flow
 
 @Dao

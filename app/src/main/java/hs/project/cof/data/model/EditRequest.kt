@@ -1,4 +1,4 @@
-package hs.project.cof.data.remote.model
+package hs.project.cof.data.model
 
 data class EditRequest(
     val input: String,

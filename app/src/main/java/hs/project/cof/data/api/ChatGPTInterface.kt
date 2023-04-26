@@ -1,16 +1,15 @@
-package hs.project.cof.data.remote.api
+package hs.project.cof.data.api
 
-import hs.project.cof.base.ApplicationClass.Companion.retrofit
-import hs.project.cof.data.remote.model.*
+import hs.project.cof.data.model.ChatRequest
+import hs.project.cof.data.model.ChatResponse
+import hs.project.cof.data.model.CompletionRequest
+import hs.project.cof.data.model.CompletionResponse
+import hs.project.cof.data.model.EditRequest
+import hs.project.cof.data.model.EditResponse
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 
-object ChatGPTAPI {
-    val retrofitService : ChatGPTInterface by lazy {
-        retrofit.create(ChatGPTInterface::class.java)
-    }
-}
 
 interface ChatGPTInterface {
     @POST("/v1/chat/completions")

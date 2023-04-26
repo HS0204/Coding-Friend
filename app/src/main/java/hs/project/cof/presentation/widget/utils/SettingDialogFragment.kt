@@ -15,14 +15,11 @@ import androidx.fragment.app.activityViewModels
 import hs.project.cof.R
 import hs.project.cof.base.ApplicationClass.Companion.DialogType
 import hs.project.cof.base.ApplicationClass.Companion.getDialogType
-import hs.project.cof.presentation.viewModels.ChatViewModelFactory
 import hs.project.cof.presentation.viewModels.ChatViewModel
 
-class SettingDialogFragment() : DialogFragment() {
+class SettingDialogFragment : DialogFragment() {
 
-    private val viewModel: ChatViewModel by activityViewModels {
-        ChatViewModelFactory()
-    }
+    private val viewModel: ChatViewModel by activityViewModels()
     private lateinit var type: String
     private lateinit var builder: AlertDialog.Builder
 

@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import hs.project.cof.data.db.ChatList
 import hs.project.cof.data.db.ChatListDao
-import hs.project.cof.data.remote.model.Message
+import hs.project.cof.data.model.Message
 import kotlinx.coroutines.flow.Flow
 
 class ChatListRepository(private val chatListDao: ChatListDao) {

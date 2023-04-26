@@ -8,16 +8,13 @@ import hs.project.cof.base.ApplicationClass.Companion.getDialogType
 import hs.project.cof.base.ApplicationClass.Companion.DialogType
 import hs.project.cof.base.BaseFragment
 import hs.project.cof.databinding.FragmentSettingBinding
-import hs.project.cof.presentation.viewModels.ChatViewModelFactory
 import hs.project.cof.presentation.viewModels.ChatViewModel
 import hs.project.cof.presentation.widget.utils.SettingDialogFragment
 
 
 class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
 
-    private val viewModel: ChatViewModel by activityViewModels {
-        ChatViewModelFactory()
-    }
+    private val viewModel: ChatViewModel by activityViewModels()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

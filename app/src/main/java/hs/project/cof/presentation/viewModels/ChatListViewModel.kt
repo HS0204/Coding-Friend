@@ -4,7 +4,7 @@ import androidx.lifecycle.*
 import hs.project.cof.base.ApplicationClass.Companion.getViewName
 import hs.project.cof.data.db.ChatList
 import hs.project.cof.data.db.ChatListDao
-import hs.project.cof.data.remote.model.Message
+import hs.project.cof.data.model.Message
 import hs.project.cof.repositories.ChatListRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
